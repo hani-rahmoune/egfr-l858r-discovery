@@ -1,0 +1,48 @@
+data:
+  raw:
+    chembl_egfr: data/raw/chembl_egfr_bioactivity.csv
+    bindingdb_egfr: data/raw/bindingdb_egfr_bioactivity.csv
+  interim:
+    cleaned: data/interim/egfr_cleaned.csv
+    standardized: data/interim/egfr_standardized.csv
+  processed:
+    mutant: data/processed/egfr_l858r_dataset.csv
+    wt: data/processed/egfr_wt_dataset.csv
+    selectivity: data/processed/egfr_selectivity_dataset.csv
+    features_mutant: data/processed/features_mutant.parquet
+    features_wt: data/processed/features_wt.parquet
+    split_assignments: data/processed/split_assignments.csv
+    protein_embeddings_dir: data/processed/protein_embeddings/
+  generated:
+    smiles: data/generated/generated_smiles.csv
+    ranked: data/generated/final_ranked_candidates.csv
+    screening_results: data/generated/screening_results.csv
+  docking:
+    ligands_dir: data/docking/ligands/
+    protein_dir: data/docking/protein/
+    results: data/docking/results/vina_scores.csv
+
+models:
+  qsar:
+    mutant: models/qsar/best_mutant_model.pkl
+    wt: models/qsar/best_wt_model.pkl
+    scaler_mutant: models/qsar/scaler_mutant.pkl
+    scaler_wt: models/qsar/scaler_wt.pkl
+  gnn:
+    mutant: models/gnn/gnn_mutant.pt
+    wt: models/gnn/gnn_wt.pt
+  docking_proxy:
+    model: models/docking_proxy/proxy_model.pkl
+  generator:
+    pretrained: models/generator/pretrained_gru.pt
+    rl_finetuned: models/generator/rl_finetuned_gru.pt
+  production:
+    mutant_model: models/production/mutant_model.pkl
+    wt_model: models/production/wt_model.pkl
+    scaler: models/production/scaler.pkl
+    metadata: models/production/metadata.json
+
+reports:
+  figures: reports/figures/
+  tables: reports/tables/
+  final: reports/final_report.md

@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "egfr-l858r-drug-discovery"
+version = "0.1.0"
+description = "Mutation-aware AI drug discovery platform for EGFR L858R NSCLC"
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-q --disable-warnings --maxfail=3"
+markers = [
+    "unit: fast unit tests, no training",
+    "integration: integration tests with real data",
+    "slow: tests that take more than 10 seconds",
+    "docking: tests that require AutoDock Vina",
+    "gcp: tests that require Google Cloud credentials",
+    "mlflow: tests that require MLflow server",
+    "heavy: tests that require GPU or large models",
+    "colab: tests meant to run on Colab only",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]

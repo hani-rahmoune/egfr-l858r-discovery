@@ -1,0 +1,120 @@
+fingerprints:
+  primary: morgan_ecfp4_desc
+
+  morgan_ecfp4:
+    type: morgan
+    radius: 2
+    n_bits: 2048
+    use_chirality: true
+    include_descriptors: false
+
+  morgan_ecfp6:
+    type: morgan
+    radius: 3
+    n_bits: 2048
+    use_chirality: true
+    include_descriptors: false
+
+  maccs:
+    type: maccs
+    include_descriptors: false
+
+  rdkit_topological:
+    type: rdkit
+    n_bits: 2048
+    include_descriptors: false
+
+  atom_pair:
+    type: atom_pair
+    n_bits: 2048
+    include_descriptors: false
+
+  morgan_ecfp4_desc:
+    type: morgan
+    radius: 2
+    n_bits: 2048
+    use_chirality: true
+    include_descriptors: true
+
+scaffold_split:
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  seed: 42
+
+qsar:
+  random_forest:
+    n_estimators: 300
+    max_depth: null
+    min_samples_leaf: 2
+    n_jobs: -1
+    random_state: 42
+
+  xgboost:
+    n_estimators: 300
+    learning_rate: 0.05
+    max_depth: 6
+    subsample: 0.8
+    colsample_bytree: 0.8
+    random_state: 42
+
+  lightgbm:
+    n_estimators: 300
+    learning_rate: 0.05
+    num_leaves: 63
+    random_state: 42
+
+  mlp:
+    hidden_layer_sizes: [512, 256, 128]
+    activation: relu
+    max_iter: 500
+    random_state: 42
+
+gnn:
+  hidden_channels: 128
+  num_layers: 4
+  dropout: 0.2
+  batch_size: 64
+  lr: 0.001
+  epochs: 100
+  patience: 15
+
+docking_proxy:
+  model_type: xgboost
+  training_set_size: 5000
+  min_active_fraction: 0.30
+  max_active_fraction: 0.50
+
+generator:
+  pretrain:
+    hidden_size: 512
+    num_layers: 3
+    dropout: 0.1
+    batch_size: 128
+    lr: 0.001
+    epochs: 30
+  rl:
+    episodes: 500
+    batch_size: 64
+    sigma: 0.5
+
+selectivity:
+  strong_mutant_threshold: 1.0
+  moderate_mutant_threshold: 0.5
+  wt_bias_threshold: 0.0
+
+applicability_domain:
+  method: tanimoto
+  in_domain_threshold: 0.50
+  borderline_threshold: 0.30
+  confidence_factors:
+    in_domain: 1.0
+    borderline: 0.75
+    out_of_domain: 0.50
+
+ranking:
+  weights:
+    mutant_activity: 0.35
+    selectivity: 0.25
+    docking: 0.20
+    admet: 0.20
