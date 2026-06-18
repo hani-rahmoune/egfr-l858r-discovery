@@ -1,0 +1,704 @@
+{
+  "n_candidates": 50,
+  "n_ok": 49,
+  "n_partial": 0,
+  "n_failed": 1,
+  "n_covalent_flagged": 21,
+  "compounds": [
+    {
+      "cid": "cmpd_024",
+      "smiles": "O=S(=O)(O)CCNc1cc2ncnc(Nc3cccc(Br)c3)c2cn1",
+      "pred_pic50": 8.684,
+      "pic50": 8.85,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -7.439,
+      "wt_score": -6.486,
+      "selectivity_delta": -0.953,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_008",
+      "smiles": "C=CC(=O)Nc1cccc(-n2c(=O)c(=O)n(C(C)C)c3cnc(Nc4ccc(N5CCN(C)CC5)cc4OC)nc32)c1",
+      "pred_pic50": 8.959,
+      "pic50": 9.52,
+      "mutation_flag": "T790M",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -8.865,
+      "wt_score": -8.009,
+      "selectivity_delta": -0.856,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_033",
+      "smiles": "C=C(C(=O)N1CCN(C(=O)Oc2cc3c(Nc4ccc(Cl)c(Cl)c4F)ncnc3cc2OC)[C@H](C)C1)C(F)(F)F",
+      "pred_pic50": 8.589,
+      "pic50": 9.42,
+      "mutation_flag": "unknown",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -8.829,
+      "wt_score": -8.106,
+      "selectivity_delta": -0.723,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_015",
+      "smiles": "CN(C)c1cc2ncnc(Nc3cccc(Br)c3)c2cn1",
+      "pred_pic50": 8.816,
+      "pic50": 10.05,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -7.552,
+      "wt_score": -6.918,
+      "selectivity_delta": -0.634,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_012",
+      "smiles": "Brc1cccc(Nc2ncnc3cc(NCCc4c[nH]cn4)ncc23)c1",
+      "pred_pic50": 8.856,
+      "pic50": 9.04,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -7.895,
+      "wt_score": -7.304,
+      "selectivity_delta": -0.591,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_011",
+      "smiles": "C=CC(=O)N1CCC(Oc2cc3c(Nc4ccc(Cl)c(Cl)c4F)ncnc3cc2OC)CC1",
+      "pred_pic50": 8.866,
+      "pic50": 9.6,
+      "mutation_flag": "wild_type",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -8.591,
+      "wt_score": -8.088,
+      "selectivity_delta": -0.503,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_021",
+      "smiles": "C=CC(=O)Oc1cc2c(Nc3ccc(Cl)c(Cl)c3F)ncnc2cc1OC",
+      "pred_pic50": 8.764,
+      "pic50": 9.27,
+      "mutation_flag": "unknown",
+      "warheads": [
+        "acrylate_ester"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -7.571,
+      "wt_score": -7.131,
+      "selectivity_delta": -0.44,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_048",
+      "smiles": "Cc1cccc(Nc2ncnc3cc(NCCCn4ccnc4)ncc23)c1",
+      "pred_pic50": 8.398,
+      "pic50": 8.46,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -7.567,
+      "wt_score": -7.141,
+      "selectivity_delta": -0.426,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_037",
+      "smiles": "Cn1ncc2cc3c(Nc4cccc(Br)c4)ncnc3cc21",
+      "pred_pic50": 8.524,
+      "pic50": 7.89,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -8.292,
+      "wt_score": -7.873,
+      "selectivity_delta": -0.419,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_022",
+      "smiles": "C=CC(=O)Nc1cccc(-n2c(=O)c(=O)n(CC)c3cnc(Nc4ccc(N5CCN(C)CC5)cc4OC)nc32)c1",
+      "pred_pic50": 8.754,
+      "pic50": 8.92,
+      "mutation_flag": "T790M",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -8.534,
+      "wt_score": -8.121,
+      "selectivity_delta": -0.413,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_010",
+      "smiles": "Brc1cccc(Nc2ncnc3cc(NCCCn4ccnc4)ncc23)c1",
+      "pred_pic50": 8.88,
+      "pic50": 9.29,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -7.195,
+      "wt_score": -6.803,
+      "selectivity_delta": -0.392,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_038",
+      "smiles": "O=C(O)CCCNc1cc2ncnc(Nc3cccc(Br)c3)c2cn1",
+      "pred_pic50": 8.508,
+      "pic50": 9.55,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -7.122,
+      "wt_score": -6.735,
+      "selectivity_delta": -0.387,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_030",
+      "smiles": "O=C(O)/C=C/C(=O)Nc1ccc2ncnc(Nc3cccc(Br)c3)c2c1",
+      "pred_pic50": 8.623,
+      "pic50": 9.43,
+      "mutation_flag": "unknown",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -7.903,
+      "wt_score": -7.547,
+      "selectivity_delta": -0.356,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_002",
+      "smiles": "COc1cc2ncnc(Nc3cccc(Br)c3)c2cc1OC",
+      "pred_pic50": 9.153,
+      "pic50": 8.4,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -7.325,
+      "wt_score": -6.991,
+      "selectivity_delta": -0.334,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_014",
+      "smiles": "C=CS(=O)(=O)Nc1cc2c(Nc3cccc(Br)c3)ncnc2cn1",
+      "pred_pic50": 8.842,
+      "pic50": 9.12,
+      "mutation_flag": "unknown",
+      "warheads": [
+        "vinyl_sulfone"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -7.468,
+      "wt_score": -7.136,
+      "selectivity_delta": -0.332,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_029",
+      "smiles": "C=CS(=O)(=O)Nc1ccc2ncnc(Nc3cccc(Br)c3)c2c1",
+      "pred_pic50": 8.624,
+      "pic50": 8.85,
+      "mutation_flag": "unknown",
+      "warheads": [
+        "vinyl_sulfone"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -7.694,
+      "wt_score": -7.364,
+      "selectivity_delta": -0.33,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_023",
+      "smiles": "Brc1cccc(Nc2ncnc3cc4[nH]ccc4cc23)c1",
+      "pred_pic50": 8.741,
+      "pic50": 7.66,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -8.05,
+      "wt_score": -7.723,
+      "selectivity_delta": -0.327,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_017",
+      "smiles": "Brc1cccc(Nc2ncnc3cc4[nH]ncc4cc23)c1",
+      "pred_pic50": 8.807,
+      "pic50": 9.36,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -7.99,
+      "wt_score": -7.669,
+      "selectivity_delta": -0.321,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_005",
+      "smiles": "OCCNc1cc2ncnc(Nc3cccc(Br)c3)c2cn1",
+      "pred_pic50": 9.036,
+      "pic50": 9.62,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -7.075,
+      "wt_score": -6.774,
+      "selectivity_delta": -0.301,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_049",
+      "smiles": "Cc1nc(F)ccc1[C@@H](Nc1cc(Cl)c2ncc(C#N)c(NCC(C)(C)C)c2c1)C1=CN(C2(C(F)F)CC2)NN1",
+      "pred_pic50": 8.394,
+      "pic50": 8.52,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -9.215,
+      "wt_score": -8.918,
+      "selectivity_delta": -0.297,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_050",
+      "smiles": "C=CC(=O)Nc1cccc(-n2c(=O)c(=O)n(C)c3cnc(Nc4ccc(N5CCN(C)CC5)cc4OC)nc32)c1",
+      "pred_pic50": 8.394,
+      "pic50": 8.33,
+      "mutation_flag": "T790M",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -8.754,
+      "wt_score": -8.457,
+      "selectivity_delta": -0.297,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_019",
+      "smiles": "C=CC(=O)Nc1cc2c(Nc3cccc(Br)c3)ncnc2cn1",
+      "pred_pic50": 8.767,
+      "pic50": 8.47,
+      "mutation_flag": "unknown",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -7.53,
+      "wt_score": -7.256,
+      "selectivity_delta": -0.274,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_018",
+      "smiles": "C=CC(=O)Nc1ccc2ncnc(Nc3cccc(Br)c3)c2c1",
+      "pred_pic50": 8.802,
+      "pic50": 9.15,
+      "mutation_flag": "unknown",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -7.793,
+      "wt_score": -7.543,
+      "selectivity_delta": -0.25,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_028",
+      "smiles": "OCCN(CCO)CCCNc1cc2ncnc(Nc3cccc(Br)c3)c2cn1",
+      "pred_pic50": 8.627,
+      "pic50": 8.92,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -6.335,
+      "wt_score": -6.15,
+      "selectivity_delta": -0.185,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_034",
+      "smiles": "C=CC(=O)Nc1cccc(-n2c(=O)c(=O)n(C(C)C)c3cnc(Nc4ccc(N5CCN(C)CC5)c(OC)c4)nc32)c1",
+      "pred_pic50": 8.58,
+      "pic50": 8.89,
+      "mutation_flag": "T790M",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -8.514,
+      "wt_score": -8.348,
+      "selectivity_delta": -0.166,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_032",
+      "smiles": "C=CC(=O)Nc1cccc(-n2c(=O)c(=O)n(C(C)C)c3cnc(Nc4ccc(N5CCN(C)CC5)c(C)c4)nc32)c1",
+      "pred_pic50": 8.606,
+      "pic50": 8.82,
+      "mutation_flag": "T790M",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -9.185,
+      "wt_score": -9.026,
+      "selectivity_delta": -0.159,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_009",
+      "smiles": "C=CC(=O)N1C[C@@H]2C[C@H]1CN2C(=O)Oc1cc2c(Nc3ccc(Cl)c(Cl)c3F)ncnc2cc1OC",
+      "pred_pic50": 8.917,
+      "pic50": 9.52,
+      "mutation_flag": "unknown",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -8.363,
+      "wt_score": -8.214,
+      "selectivity_delta": -0.149,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_043",
+      "smiles": "C#CC(=O)N1CCN(C(=O)Oc2cc3c(Nc4ccc(Cl)c(Cl)c4F)ncnc3cc2OC)[C@H](C)C1",
+      "pred_pic50": 8.437,
+      "pic50": 9.49,
+      "mutation_flag": "unknown",
+      "warheads": [
+        "propiolamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -8.814,
+      "wt_score": -8.713,
+      "selectivity_delta": -0.101,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_027",
+      "smiles": "C/C=C/C(=O)Nc1ccc2ncnc(Nc3cccc(Br)c3)c2c1",
+      "pred_pic50": 8.646,
+      "pic50": 9.26,
+      "mutation_flag": "unknown",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -7.719,
+      "wt_score": -7.643,
+      "selectivity_delta": -0.076,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_036",
+      "smiles": "O=C(O)CNc1cc2ncnc(Nc3cccc(Br)c3)c2cn1",
+      "pred_pic50": 8.525,
+      "pic50": 8.82,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -7.05,
+      "wt_score": -6.983,
+      "selectivity_delta": -0.067,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_031",
+      "smiles": "C/C=C/C(=O)Nc1cc2c(Nc3cccc(Br)c3)ncnc2cn1",
+      "pred_pic50": 8.61,
+      "pic50": 9.3,
+      "mutation_flag": "unknown",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -7.449,
+      "wt_score": -7.449,
+      "selectivity_delta": 0.0,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_042",
+      "smiles": "CC(C)(C)CNc1c(C#N)cnc2c(Cl)cc(N[C@H](C3=CN(C4CC4)NN3)c3csc4cnccc34)cc12",
+      "pred_pic50": 8.447,
+      "pic50": 8.7,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -8.615,
+      "wt_score": -8.616,
+      "selectivity_delta": 0.001,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_025",
+      "smiles": "CNc1cc2ncnc(Nc3cccc(Br)c3)c2cn1",
+      "pred_pic50": 8.673,
+      "pic50": 9.89,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -7.313,
+      "wt_score": -7.331,
+      "selectivity_delta": 0.018,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_006",
+      "smiles": "C=CC(=O)N(C)c1cc2c(Nc3cccc(Br)c3)ncnc2cn1",
+      "pred_pic50": 9.01,
+      "pic50": 9.77,
+      "mutation_flag": "unknown",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -7.369,
+      "wt_score": -7.391,
+      "selectivity_delta": 0.022,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_020",
+      "smiles": "[O-][N+]1(CCCNc2cc3ncnc(Nc4cccc(Br)c4)c3cn2)CCOCC1",
+      "pred_pic50": 8.765,
+      "pic50": 9.13,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -7.334,
+      "wt_score": -7.366,
+      "selectivity_delta": 0.032,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_007",
+      "smiles": "C=CC(=O)Nc1cccc(-n2c(=O)c(=O)n(CCC)c3cnc(Nc4ccc(N5CCN(C)CC5)cc4OC)nc32)c1",
+      "pred_pic50": 8.979,
+      "pic50": 9.22,
+      "mutation_flag": "T790M",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -8.271,
+      "wt_score": -8.309,
+      "selectivity_delta": 0.038,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_044",
+      "smiles": "O=C(/C=C/Cl)Nc1cc2c(Nc3cccc(Br)c3)ncnc2cn1",
+      "pred_pic50": 8.428,
+      "pic50": 7.7,
+      "mutation_flag": "unknown",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -7.375,
+      "wt_score": -7.441,
+      "selectivity_delta": 0.066,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_047",
+      "smiles": "C=CC(=O)Nc1ccc2ncnc(Nc3cccc(C(F)(F)F)c3)c2c1",
+      "pred_pic50": 8.416,
+      "pic50": 9.04,
+      "mutation_flag": "unknown",
+      "warheads": [
+        "acrylamide"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -7.96,
+      "wt_score": -8.045,
+      "selectivity_delta": 0.085,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_046",
+      "smiles": "Brc1cccc(Nc2ncnc3cc(NCCCN4CCOCC4)ncc23)c1",
+      "pred_pic50": 8.419,
+      "pic50": 8.72,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -7.324,
+      "wt_score": -7.418,
+      "selectivity_delta": 0.094,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_039",
+      "smiles": "CN(C)Cc1ccc(C(=O)N[C@@H]2[C@H]3Oc4ccc(Oc5ccnc6c5CCC(=O)N6)cc4[C@@H]23)cc1C(F)(F)F",
+      "pred_pic50": 8.502,
+      "pic50": 8.57,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -9.129,
+      "wt_score": -9.255,
+      "selectivity_delta": 0.126,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_016",
+      "smiles": "NC1(c2cc(C(=O)N[C@@H]3[C@H]4Oc5ccc(Oc6ccnc7c6CCC(=O)N7)cc5[C@@H]34)cc(C(F)(F)F)c2)CC1",
+      "pred_pic50": 8.81,
+      "pic50": 8.03,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -9.567,
+      "wt_score": -9.723,
+      "selectivity_delta": 0.156,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_026",
+      "smiles": "CNc1ccc2c(Nc3cccc(Br)c3)ncnc2c1",
+      "pred_pic50": 8.672,
+      "pic50": 8.4,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -7.264,
+      "wt_score": -7.436,
+      "selectivity_delta": 0.172,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_013",
+      "smiles": "C=CS(=O)(=O)c1cc2c(Nc3cccc(Br)c3)ncnc2cn1",
+      "pred_pic50": 8.854,
+      "pic50": 9.37,
+      "mutation_flag": "unknown",
+      "warheads": [
+        "vinyl_sulfone"
+      ],
+      "docking_confidence": "low_confidence",
+      "l858r_score": -7.236,
+      "wt_score": -7.473,
+      "selectivity_delta": 0.237,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_003",
+      "smiles": "CC(C)n1c2cc(Nc3ccnc(-c4cnn(S(=O)(=O)C5CC5)c4)n3)ncc2c2c(OCC(F)(F)F)cc(N3CCN(C)CC3)cc21",
+      "pred_pic50": 9.147,
+      "pic50": 9.6,
+      "mutation_flag": "T790M",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -9.466,
+      "wt_score": -9.738,
+      "selectivity_delta": 0.272,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_001",
+      "smiles": "Nc1ccc2c(Nc3cccc(Br)c3)ncnc2c1",
+      "pred_pic50": 9.326,
+      "pic50": 10.0,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -7.051,
+      "wt_score": -7.386,
+      "selectivity_delta": 0.335,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_045",
+      "smiles": "Cc1nc(F)ccc1[C@H](Nc1cc(Cl)c2ncc(C#N)c(NCC(C)(C)C(F)(F)F)c2c1)C1=CN(C2(C(F)F)CC2)NN1",
+      "pred_pic50": 8.426,
+      "pic50": 8.52,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -9.014,
+      "wt_score": -9.382,
+      "selectivity_delta": 0.368,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_035",
+      "smiles": "C[C@@H](Nc1c(C#N)cnc2c(Cl)cc(N[C@H](C3=CN(C4CCN(C(C)(C)C)CC4)NN3)c3csc4c3CCN(C3COC3)C4)cc12)c1ccccc1",
+      "pred_pic50": 8.574,
+      "pic50": 9.0,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -9.854,
+      "wt_score": -10.289,
+      "selectivity_delta": 0.435,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_004",
+      "smiles": "CC(C)(N)c1cc(C(=O)N[C@@H]2[C@H]3Oc4ccc(Oc5ccnc6c5CCC(=O)N6)cc4[C@@H]23)cc(C(F)(F)F)c1",
+      "pred_pic50": 9.122,
+      "pic50": 9.82,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -9.251,
+      "wt_score": -9.703,
+      "selectivity_delta": 0.452,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_040",
+      "smiles": "CC[C@@H](Nc1c(C#N)cnc2c(Cl)cc(N[C@H](C3=CN(C4CCN(C(C)(C)C)CC4)NN3)c3cccnc3C)cc12)c1ccccc1",
+      "pred_pic50": 8.485,
+      "pic50": 8.7,
+      "mutation_flag": "unknown",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": -8.727,
+      "wt_score": -9.648,
+      "selectivity_delta": 0.921,
+      "docking_status": "ok"
+    },
+    {
+      "cid": "cmpd_041",
+      "smiles": "COc1cc2ncnc(Nc3ccc(F)c(Cl)c3)c2cc1OCCCN1CCN(CCC(=O)NCCCCCCCCOc2cccc3c2C(=O)N(C2CCC(=O)NC2=O)C3=O)CC1",
+      "pred_pic50": 8.484,
+      "pic50": 8.42,
+      "mutation_flag": "L858R",
+      "warheads": [],
+      "docking_confidence": "standard",
+      "l858r_score": null,
+      "wt_score": null,
+      "selectivity_delta": null,
+      "docking_status": "failed"
+    }
+  ],
+  "note": "EXPLORATORY. Rigid receptor (2ITZ L858R / 2ITY_aligned WT). Vina 1.2.7, exhaustiveness=8, seed=42. Top-50 candidates ranked by general EGFR backbone (RandomForest). Covalent warhead compounds tagged low_confidence: non-covalent docking cannot model covalent bond. selectivity_delta = L858R - WT (kcal/mol); negative = L858R-selective. No ADMET filter applied. Pipeline-validation pass."
+}

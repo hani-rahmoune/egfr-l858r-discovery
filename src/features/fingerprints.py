@@ -1,8 +1,10 @@
+"""Morgan/ECFP, MACCS, RDKit-topological, atom-pair, and torsion fingerprints."""
+
 from __future__ import annotations
 
 import numpy as np
 from rdkit import Chem
-from rdkit.Chem import AllChem, MACCSkeys, rdMolDescriptors
+from rdkit.Chem import MACCSkeys, rdFingerprintGenerator, rdMolDescriptors
 
 from src.utils.logging import get_logger
 
@@ -26,10 +28,10 @@ def morgan_fingerprint(
     mol = _mol(smiles)
     if mol is None:
         return None
-    fp = AllChem.GetMorganFingerprintAsBitVect(
-        mol, radius=radius, nBits=n_bits, useChirality=use_chirality
+    gen = rdFingerprintGenerator.GetMorganGenerator(
+        radius=radius, fpSize=n_bits, includeChirality=use_chirality
     )
-    return np.array(fp, dtype=np.uint8)
+    return gen.GetFingerprintAsNumPy(mol)
 
 
 def maccs_fingerprint(smiles: str) -> np.ndarray | None:
@@ -57,6 +59,23 @@ def atom_pair_fingerprint(smiles: str, n_bits: int = 2048) -> np.ndarray | None:
     return np.array(fp, dtype=np.uint8)
 
 
+def topological_torsion_fingerprint(
+    smiles: str, n_bits: int = 2048
+) -> np.ndarray | None:
+    """Topological torsion fingerprint (hashed bit vector).
+
+    Encodes sequences of 4 atoms along paths in the molecular graph.
+    Complementary to atom pairs and Morgan FPs for branching/shape information.
+    """
+    mol = _mol(smiles)
+    if mol is None:
+        return None
+    fp = rdMolDescriptors.GetHashedTopologicalTorsionFingerprintAsBitVect(
+        mol, nBits=n_bits
+    )
+    return np.array(fp, dtype=np.uint8)
+
+
 def compute_fingerprint(
     smiles: str,
     fp_type: str = "morgan_ecfp4",
@@ -66,13 +85,17 @@ def compute_fingerprint(
 ) -> np.ndarray | None:
     """Unified dispatcher. fp_type must match keys in model_config.yaml."""
     if fp_type in ("morgan_ecfp4", "morgan_ecfp6", "morgan"):
-        return morgan_fingerprint(smiles, radius=radius, n_bits=n_bits, use_chirality=use_chirality)
+        return morgan_fingerprint(
+            smiles, radius=radius, n_bits=n_bits, use_chirality=use_chirality
+        )
     elif fp_type == "maccs":
         return maccs_fingerprint(smiles)
     elif fp_type in ("rdkit_topological", "rdkit"):
         return rdkit_topological_fingerprint(smiles, n_bits=n_bits)
     elif fp_type == "atom_pair":
         return atom_pair_fingerprint(smiles, n_bits=n_bits)
+    elif fp_type == "topological_torsion":
+        return topological_torsion_fingerprint(smiles, n_bits=n_bits)
     else:
         raise ValueError(f"Unknown fingerprint type: {fp_type}")
 
@@ -91,8 +114,13 @@ def compute_fingerprint_matrix(
     """
     fps, valid_indices = [], []
     for i, smi in enumerate(smiles_list):
-        fp = compute_fingerprint(smi, fp_type=fp_type, radius=radius,
-                                 n_bits=n_bits, use_chirality=use_chirality)
+        fp = compute_fingerprint(
+            smi,
+            fp_type=fp_type,
+            radius=radius,
+            n_bits=n_bits,
+            use_chirality=use_chirality,
+        )
         if fp is not None:
             fps.append(fp)
             valid_indices.append(i)

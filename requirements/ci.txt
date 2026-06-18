@@ -1,0 +1,10 @@
+# CI-only deps: base + test tools + the ML libs needed to import src/ modules.
+# Excludes: torch, optuna, mlflow, umap-learn, matplotlib, seaborn, tqdm
+# (all offline-training-only; not needed to collect and run unit tests).
+-r base.txt
+pytest>=7.4.0
+pytest-cov>=4.1.0
+ruff>=0.1.0
+black>=23.0.0
+xgboost==3.2.0
+lightgbm>=4.1.0

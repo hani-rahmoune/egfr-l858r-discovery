@@ -1,0 +1,57 @@
+services:
+
+  # ── API (Phase 24) ─────────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      # Large artifacts are volume-mounted so the image layer stays small.
+      # models/ contains the trained sklearn / XGBoost pickles.
+      # data/   contains interim CSVs that seed the applicability-domain fit.
+      - ./models:/app/models:ro
+      - ./data:/app/data:ro
+    environment:
+      USE_GCS: "false"
+    # Simple process-level health check — no curl/wget needed in slim image.
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 60s   # ModelRegistry.load() fits AD on ~1347 SMILES at startup
+    restart: unless-stopped
+
+  # ── Dashboard (Phase 25) ───────────────────────────────────────────────────
+  dashboard:
+    build:
+      context: .
+      dockerfile: docker/dashboard/Dockerfile
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./models:/app/models:ro
+      - ./data:/app/data:ro
+    environment:
+      USE_GCS: "false"
+      # Service-name URL so the dashboard reaches the API inside the compose network.
+      API_BASE_URL: "http://api:8000"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── MLflow (stub — Phase 11 not yet wired) ────────────────────────────────
+  # Uncomment once MLflow tracking is wired into train_models.py / train_l858r_model.py.
+  # mlflow:
+  #   image: ghcr.io/mlflow/mlflow:v2.13.0
+  #   ports:
+  #     - "5000:5000"
+  #   command: mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri /mlruns
+  #   volumes:
+  #     - ./mlruns:/mlruns
+  #   environment:
+  #     MLFLOW_TRACKING_URI: "http://mlflow:5000"

@@ -3,16 +3,21 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from src.features.fingerprints import (
-    compute_fingerprint, compute_fingerprint_matrix,
-    maccs_fingerprint, morgan_fingerprint,
-)
 from src.features.descriptors import (
-    DESCRIPTOR_NAMES, check_lipinski, check_veber,
-    compute_descriptors, compute_descriptor_matrix,
+    DESCRIPTOR_NAMES,
+    check_lipinski,
+    check_veber,
+    compute_descriptor_matrix,
+    compute_descriptors,
+)
+from src.features.fingerprints import (
+    compute_fingerprint,
+    compute_fingerprint_matrix,
+    maccs_fingerprint,
+    morgan_fingerprint,
 )
 
-VALID = "CC(=O)Nc1ccc(O)cc1"   # paracetamol
+VALID = "CC(=O)Nc1ccc(O)cc1"  # paracetamol
 CAFFEINE = "CN1C=NC2=C1C(=O)N(C(=O)N2C)C"
 INVALID = "not_smiles"
 
@@ -50,13 +55,16 @@ class TestMaccsFingerprint:
 
 @pytest.mark.unit
 class TestComputeFingerprint:
-    @pytest.mark.parametrize("fp_type,expected_len", [
-        ("morgan_ecfp4", 2048),
-        ("morgan_ecfp6", 2048),
-        ("maccs", 167),
-        ("rdkit_topological", 2048),
-        ("atom_pair", 2048),
-    ])
+    @pytest.mark.parametrize(
+        "fp_type,expected_len",
+        [
+            ("morgan_ecfp4", 2048),
+            ("morgan_ecfp6", 2048),
+            ("maccs", 167),
+            ("rdkit_topological", 2048),
+            ("atom_pair", 2048),
+        ],
+    )
     def test_all_types_correct_shape(self, fp_type, expected_len):
         fp = compute_fingerprint(VALID, fp_type=fp_type)
         assert fp is not None and fp.shape == (expected_len,)

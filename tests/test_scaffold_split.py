@@ -10,20 +10,54 @@ from src.splitting.scaffold_split import get_bemis_murcko_scaffold, scaffold_spl
 def drug_like_df():
     """20 molecules with structurally distinct scaffolds for split testing."""
     smiles_list = [
-        "COc1cc2c(cc1OC)CC(C)NCC2", "CC(=O)Nc1ccc(O)cc1",
-        "CN1C=NC2=C1C(=O)N(C(=O)N2C)C", "c1ccc2c(c1)ccc(=O)o2",
-        "c1cnc2ccccc2c1", "c1ccc2[nH]cccc2c1", "c1cnc2[nH]cncc2c1",
-        "c1ccc2ncccc2c1", "O=C1CCCN1", "c1ccncc1",
-        "c1csc2ccccc12", "c1coc2ccccc12", "c1ccoc1",
-        "c1ccsc1", "c1cnc[nH]1", "c1ccnc(N)c1",
-        "O=C1NC(=O)c2ccccc21", "Cn1ccc2ccccc21",
-        "c1ccc(cc1)c2ccccn2", "CC1=CC(=O)c2ccccc2O1",
+        "COc1cc2c(cc1OC)CC(C)NCC2",
+        "CC(=O)Nc1ccc(O)cc1",
+        "CN1C=NC2=C1C(=O)N(C(=O)N2C)C",
+        "c1ccc2c(c1)ccc(=O)o2",
+        "c1cnc2ccccc2c1",
+        "c1ccc2[nH]cccc2c1",
+        "c1cnc2[nH]cncc2c1",
+        "c1ccc2ncccc2c1",
+        "O=C1CCCN1",
+        "c1ccncc1",
+        "c1csc2ccccc12",
+        "c1coc2ccccc12",
+        "c1ccoc1",
+        "c1ccsc1",
+        "c1cnc[nH]1",
+        "c1ccnc(N)c1",
+        "O=C1NC(=O)c2ccccc21",
+        "Cn1ccc2ccccc21",
+        "c1ccc(cc1)c2ccccn2",
+        "CC1=CC(=O)c2ccccc2O1",
     ]
-    return pd.DataFrame({
-        "canonical_smiles": smiles_list,
-        "pic50": [7.0, 6.5, 8.0, 5.5, 7.2, 6.8, 7.5, 6.0, 5.8, 7.1,
-                  6.3, 5.9, 4.5, 5.0, 6.7, 7.4, 6.1, 7.8, 6.6, 5.4],
-    })
+    return pd.DataFrame(
+        {
+            "canonical_smiles": smiles_list,
+            "pic50": [
+                7.0,
+                6.5,
+                8.0,
+                5.5,
+                7.2,
+                6.8,
+                7.5,
+                6.0,
+                5.8,
+                7.1,
+                6.3,
+                5.9,
+                4.5,
+                5.0,
+                6.7,
+                7.4,
+                6.1,
+                7.8,
+                6.6,
+                5.4,
+            ],
+        }
+    )
 
 
 @pytest.mark.unit

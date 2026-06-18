@@ -1,0 +1,60 @@
+{
+  "summary": {
+    "backbone": {
+      "spearman_mean": 0.6198,
+      "spearman_std": 0.0082,
+      "rmse_mean": 0.941,
+      "rmse_std": 0.014
+    },
+    "shift": {
+      "spearman_mean": 0.599,
+      "spearman_std": 0.0124,
+      "rmse_mean": 0.827,
+      "rmse_std": 0.012
+    },
+    "ridge": {
+      "spearman_mean": 0.5932,
+      "spearman_std": 0.0167,
+      "rmse_mean": 0.873,
+      "rmse_std": 0.013
+    }
+  },
+  "per_seed": {
+    "42": {
+      "backbone_spearman": 0.635,
+      "shift_spearman": 0.619,
+      "ridge_spearman": 0.619
+    },
+    "7": {
+      "backbone_spearman": 0.611,
+      "shift_spearman": 0.607,
+      "ridge_spearman": 0.605
+    },
+    "13": {
+      "backbone_spearman": 0.62,
+      "shift_spearman": 0.594,
+      "ridge_spearman": 0.589
+    },
+    "99": {
+      "backbone_spearman": 0.618,
+      "shift_spearman": 0.59,
+      "ridge_spearman": 0.574
+    },
+    "123": {
+      "backbone_spearman": 0.615,
+      "shift_spearman": 0.585,
+      "ridge_spearman": 0.579
+    }
+  },
+  "n_l858r": 22,
+  "seeds": [
+    42,
+    7,
+    13,
+    99,
+    123
+  ],
+  "n_estimators_loo": 100,
+  "exploratory": true,
+  "verdict": "[EXPLORATORY -- Model 3] Calibration does not improve over the backbone (backbone r=0.620+/-0.008, best calibration r=0.599+/-0.012).  L858R-specific signal is not separable at n=22; use the general backbone."
+}

@@ -1,0 +1,514 @@
+{
+  "n_compounds": 15,
+  "n_seeds": 5,
+  "seeds": [
+    42,
+    7,
+    13,
+    99,
+    123
+  ],
+  "exhaustiveness": 8,
+  "threshold": 1.5,
+  "n_confident_l858r": 7,
+  "n_confident_wt": 0,
+  "n_ambiguous": 2,
+  "n_low_conf_covalent": 6,
+  "compounds": [
+    {
+      "cid": "cmpd_024",
+      "smiles": "O=S(=O)(O)CCNc1cc2ncnc(Nc3cccc(Br)c3)c2cn1",
+      "initial_delta": -0.953,
+      "docking_confidence": "standard",
+      "warheads": [],
+      "affinities_l858r": [
+        -7.439,
+        -7.42,
+        -7.23,
+        -7.295,
+        -7.57
+      ],
+      "affinities_wt": [
+        -6.486,
+        -6.462,
+        -6.326,
+        -6.959,
+        -6.654
+      ],
+      "noise_stats": {
+        "mean_l858r": -7.391,
+        "std_l858r": 0.133,
+        "n_l858r": 5,
+        "mean_wt": -6.577,
+        "std_wt": 0.243,
+        "n_wt": 5,
+        "delta": -0.813,
+        "std_delta": 0.277
+      },
+      "call": "L858R_selective"
+    },
+    {
+      "cid": "cmpd_008",
+      "smiles": "C=CC(=O)Nc1cccc(-n2c(=O)c(=O)n(C(C)C)c3cnc(Nc4ccc(N5CCN(C)CC5)cc4OC)nc32)c1",
+      "initial_delta": -0.856,
+      "docking_confidence": "low_confidence",
+      "warheads": [
+        "acrylamide"
+      ],
+      "affinities_l858r": [
+        -8.865,
+        -8.907,
+        -8.953,
+        -8.794,
+        -8.91
+      ],
+      "affinities_wt": [
+        -8.009,
+        -8.142,
+        -8.016,
+        -8.036,
+        -8.912
+      ],
+      "noise_stats": {
+        "mean_l858r": -8.886,
+        "std_l858r": 0.06,
+        "n_l858r": 5,
+        "mean_wt": -8.223,
+        "std_wt": 0.389,
+        "n_wt": 5,
+        "delta": -0.663,
+        "std_delta": 0.393
+      },
+      "call": "low_confidence_covalent"
+    },
+    {
+      "cid": "cmpd_033",
+      "smiles": "C=C(C(=O)N1CCN(C(=O)Oc2cc3c(Nc4ccc(Cl)c(Cl)c4F)ncnc3cc2OC)[C@H](C)C1)C(F)(F)F",
+      "initial_delta": -0.723,
+      "docking_confidence": "low_confidence",
+      "warheads": [
+        "acrylamide"
+      ],
+      "affinities_l858r": [
+        -8.829,
+        -8.728,
+        -8.769,
+        -8.769,
+        -8.825
+      ],
+      "affinities_wt": [
+        -8.106,
+        -8.216,
+        -8.179,
+        -8.115,
+        -8.055
+      ],
+      "noise_stats": {
+        "mean_l858r": -8.784,
+        "std_l858r": 0.043,
+        "n_l858r": 5,
+        "mean_wt": -8.134,
+        "std_wt": 0.064,
+        "n_wt": 5,
+        "delta": -0.65,
+        "std_delta": 0.077
+      },
+      "call": "low_confidence_covalent"
+    },
+    {
+      "cid": "cmpd_015",
+      "smiles": "CN(C)c1cc2ncnc(Nc3cccc(Br)c3)c2cn1",
+      "initial_delta": -0.634,
+      "docking_confidence": "standard",
+      "warheads": [],
+      "affinities_l858r": [
+        -7.552,
+        -7.399,
+        -7.394,
+        -7.429,
+        -7.365
+      ],
+      "affinities_wt": [
+        -6.918,
+        -7.184,
+        -6.948,
+        -6.894,
+        -6.933
+      ],
+      "noise_stats": {
+        "mean_l858r": -7.428,
+        "std_l858r": 0.073,
+        "n_l858r": 5,
+        "mean_wt": -6.975,
+        "std_wt": 0.118,
+        "n_wt": 5,
+        "delta": -0.452,
+        "std_delta": 0.139
+      },
+      "call": "L858R_selective"
+    },
+    {
+      "cid": "cmpd_012",
+      "smiles": "Brc1cccc(Nc2ncnc3cc(NCCc4c[nH]cn4)ncc23)c1",
+      "initial_delta": -0.591,
+      "docking_confidence": "standard",
+      "warheads": [],
+      "affinities_l858r": [
+        -7.895,
+        -8.027,
+        -7.873,
+        -8.031,
+        -7.952
+      ],
+      "affinities_wt": [
+        -7.304,
+        -7.654,
+        -7.464,
+        -7.456,
+        -7.172
+      ],
+      "noise_stats": {
+        "mean_l858r": -7.956,
+        "std_l858r": 0.073,
+        "n_l858r": 5,
+        "mean_wt": -7.41,
+        "std_wt": 0.182,
+        "n_wt": 5,
+        "delta": -0.546,
+        "std_delta": 0.196
+      },
+      "call": "L858R_selective"
+    },
+    {
+      "cid": "cmpd_011",
+      "smiles": "C=CC(=O)N1CCC(Oc2cc3c(Nc4ccc(Cl)c(Cl)c4F)ncnc3cc2OC)CC1",
+      "initial_delta": -0.503,
+      "docking_confidence": "low_confidence",
+      "warheads": [
+        "acrylamide"
+      ],
+      "affinities_l858r": [
+        -8.591,
+        -8.566,
+        -8.633,
+        -8.587,
+        -8.602
+      ],
+      "affinities_wt": [
+        -8.088,
+        -8.021,
+        -8.112,
+        -8.09,
+        -8.104
+      ],
+      "noise_stats": {
+        "mean_l858r": -8.596,
+        "std_l858r": 0.025,
+        "n_l858r": 5,
+        "mean_wt": -8.083,
+        "std_wt": 0.036,
+        "n_wt": 5,
+        "delta": -0.513,
+        "std_delta": 0.044
+      },
+      "call": "low_confidence_covalent"
+    },
+    {
+      "cid": "cmpd_021",
+      "smiles": "C=CC(=O)Oc1cc2c(Nc3ccc(Cl)c(Cl)c3F)ncnc2cc1OC",
+      "initial_delta": -0.44,
+      "docking_confidence": "low_confidence",
+      "warheads": [
+        "acrylate_ester"
+      ],
+      "affinities_l858r": [
+        -7.571,
+        -7.664,
+        -7.675,
+        -7.635,
+        -7.616
+      ],
+      "affinities_wt": [
+        -7.131,
+        -7.094,
+        -7.096,
+        -7.112,
+        -7.119
+      ],
+      "noise_stats": {
+        "mean_l858r": -7.632,
+        "std_l858r": 0.041,
+        "n_l858r": 5,
+        "mean_wt": -7.11,
+        "std_wt": 0.016,
+        "n_wt": 5,
+        "delta": -0.522,
+        "std_delta": 0.044
+      },
+      "call": "low_confidence_covalent"
+    },
+    {
+      "cid": "cmpd_048",
+      "smiles": "Cc1cccc(Nc2ncnc3cc(NCCCn4ccnc4)ncc23)c1",
+      "initial_delta": -0.426,
+      "docking_confidence": "standard",
+      "warheads": [],
+      "affinities_l858r": [
+        -7.567,
+        -7.372,
+        -7.706,
+        -7.593,
+        -7.501
+      ],
+      "affinities_wt": [
+        -7.141,
+        -7.089,
+        -7.274,
+        -7.213,
+        -6.87
+      ],
+      "noise_stats": {
+        "mean_l858r": -7.548,
+        "std_l858r": 0.123,
+        "n_l858r": 5,
+        "mean_wt": -7.117,
+        "std_wt": 0.155,
+        "n_wt": 5,
+        "delta": -0.43,
+        "std_delta": 0.198
+      },
+      "call": "L858R_selective"
+    },
+    {
+      "cid": "cmpd_037",
+      "smiles": "Cn1ncc2cc3c(Nc4cccc(Br)c4)ncnc3cc21",
+      "initial_delta": -0.419,
+      "docking_confidence": "standard",
+      "warheads": [],
+      "affinities_l858r": [
+        -8.292,
+        -8.274,
+        -8.276,
+        -8.237,
+        -8.229
+      ],
+      "affinities_wt": [
+        -7.873,
+        -7.932,
+        -7.867,
+        -7.922,
+        -7.929
+      ],
+      "noise_stats": {
+        "mean_l858r": -8.262,
+        "std_l858r": 0.027,
+        "n_l858r": 5,
+        "mean_wt": -7.905,
+        "std_wt": 0.032,
+        "n_wt": 5,
+        "delta": -0.357,
+        "std_delta": 0.042
+      },
+      "call": "L858R_selective"
+    },
+    {
+      "cid": "cmpd_022",
+      "smiles": "C=CC(=O)Nc1cccc(-n2c(=O)c(=O)n(CC)c3cnc(Nc4ccc(N5CCN(C)CC5)cc4OC)nc32)c1",
+      "initial_delta": -0.413,
+      "docking_confidence": "low_confidence",
+      "warheads": [
+        "acrylamide"
+      ],
+      "affinities_l858r": [
+        -8.534,
+        -8.341,
+        -8.339,
+        -8.292,
+        -8.391
+      ],
+      "affinities_wt": [
+        -8.121,
+        -8.231,
+        -8.274,
+        -8.055,
+        -8.224
+      ],
+      "noise_stats": {
+        "mean_l858r": -8.379,
+        "std_l858r": 0.093,
+        "n_l858r": 5,
+        "mean_wt": -8.181,
+        "std_wt": 0.09,
+        "n_wt": 5,
+        "delta": -0.198,
+        "std_delta": 0.13
+      },
+      "call": "low_confidence_covalent"
+    },
+    {
+      "cid": "cmpd_010",
+      "smiles": "Brc1cccc(Nc2ncnc3cc(NCCCn4ccnc4)ncc23)c1",
+      "initial_delta": -0.392,
+      "docking_confidence": "standard",
+      "warheads": [],
+      "affinities_l858r": [
+        -7.195,
+        -6.577,
+        -6.681,
+        -7.17,
+        -7.123
+      ],
+      "affinities_wt": [
+        -6.803,
+        -6.904,
+        -6.94,
+        -6.97,
+        -6.663
+      ],
+      "noise_stats": {
+        "mean_l858r": -6.949,
+        "std_l858r": 0.296,
+        "n_l858r": 5,
+        "mean_wt": -6.856,
+        "std_wt": 0.125,
+        "n_wt": 5,
+        "delta": -0.093,
+        "std_delta": 0.321
+      },
+      "call": "ambiguous"
+    },
+    {
+      "cid": "cmpd_038",
+      "smiles": "O=C(O)CCCNc1cc2ncnc(Nc3cccc(Br)c3)c2cn1",
+      "initial_delta": -0.387,
+      "docking_confidence": "standard",
+      "warheads": [],
+      "affinities_l858r": [
+        -7.122,
+        -7.202,
+        -7.128,
+        -7.19,
+        -7.309
+      ],
+      "affinities_wt": [
+        -6.735,
+        -6.978,
+        -6.37,
+        -6.851,
+        -7.102
+      ],
+      "noise_stats": {
+        "mean_l858r": -7.19,
+        "std_l858r": 0.075,
+        "n_l858r": 5,
+        "mean_wt": -6.807,
+        "std_wt": 0.28,
+        "n_wt": 5,
+        "delta": -0.383,
+        "std_delta": 0.29
+      },
+      "call": "ambiguous"
+    },
+    {
+      "cid": "cmpd_030",
+      "smiles": "O=C(O)/C=C/C(=O)Nc1ccc2ncnc(Nc3cccc(Br)c3)c2c1",
+      "initial_delta": -0.356,
+      "docking_confidence": "low_confidence",
+      "warheads": [
+        "acrylamide"
+      ],
+      "affinities_l858r": [
+        -7.903,
+        -7.812,
+        -7.767,
+        -7.818,
+        -7.868
+      ],
+      "affinities_wt": [
+        -7.547,
+        -7.596,
+        -7.527,
+        -7.569,
+        -7.535
+      ],
+      "noise_stats": {
+        "mean_l858r": -7.834,
+        "std_l858r": 0.053,
+        "n_l858r": 5,
+        "mean_wt": -7.555,
+        "std_wt": 0.028,
+        "n_wt": 5,
+        "delta": -0.279,
+        "std_delta": 0.06
+      },
+      "call": "low_confidence_covalent"
+    },
+    {
+      "cid": "cmpd_002",
+      "smiles": "COc1cc2ncnc(Nc3cccc(Br)c3)c2cc1OC",
+      "initial_delta": -0.334,
+      "docking_confidence": "standard",
+      "warheads": [],
+      "affinities_l858r": [
+        -7.325,
+        -7.246,
+        -7.339,
+        -7.371,
+        -7.347
+      ],
+      "affinities_wt": [
+        -6.991,
+        -6.979,
+        -6.99,
+        -6.988,
+        -6.97
+      ],
+      "noise_stats": {
+        "mean_l858r": -7.326,
+        "std_l858r": 0.048,
+        "n_l858r": 5,
+        "mean_wt": -6.984,
+        "std_wt": 0.009,
+        "n_wt": 5,
+        "delta": -0.342,
+        "std_delta": 0.048
+      },
+      "call": "L858R_selective"
+    },
+    {
+      "cid": "cmpd_014",
+      "smiles": "C=CS(=O)(=O)Nc1cc2c(Nc3cccc(Br)c3)ncnc2cn1",
+      "initial_delta": -0.332,
+      "docking_confidence": "low_confidence",
+      "warheads": [
+        "vinyl_sulfone"
+      ],
+      "affinities_l858r": [
+        -7.468,
+        -7.471,
+        -7.456,
+        -7.434,
+        -7.453
+      ],
+      "affinities_wt": [
+        -7.136,
+        -7.226,
+        -7.243,
+        -7.084,
+        -7.063
+      ],
+      "noise_stats": {
+        "mean_l858r": -7.456,
+        "std_l858r": 0.015,
+        "n_l858r": 5,
+        "mean_wt": -7.15,
+        "std_wt": 0.081,
+        "n_wt": 5,
+        "delta": -0.306,
+        "std_delta": 0.083
+      },
+      "call": "low_confidence_covalent"
+    }
+  ],
+  "note": "EXPLORATORY. Rigid receptor (2ITZ L858R / 2ITY_aligned WT). Vina 1.2.7 scoring function. Noise quantified over 5 seeds; std_delta = sqrt(std_L858R^2 + std_WT^2). Confident call criterion: |delta| > 1.5 * std_delta. Covalent compounds (docking_confidence=low_confidence) are excluded from confident calls regardless of noise-quantified delta."
+}

@@ -36,3 +36,11 @@ target-version = "py310"
 [tool.ruff.lint]
 select = ["E", "F", "W", "I"]
 ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+# Scripts and tests prepend sys.path before imports — E402 is intentional.
+# Tests use short ligand/loop variable names (l) — E741 is acceptable there.
+"scripts/*.py" = ["E402", "E741"]
+"tests/*.py" = ["E402", "E741"]
+"src/dashboard/app.py" = ["E402"]
+"src/generation/rl_trainer.py" = ["E402"]

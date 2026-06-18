@@ -1,5 +1,5 @@
 -r base.txt
-xgboost>=2.0.0
+xgboost==3.2.0
 lightgbm>=4.1.0
 optuna>=3.3.0
 mlflow>=2.8.0

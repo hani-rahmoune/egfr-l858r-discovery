@@ -8,10 +8,18 @@ from src.utils.logging import get_logger
 logger = get_logger(__name__)
 
 UNIT_TO_MOLAR: dict[str, float] = {
-    "m": 1.0, "mm": 1e-3, "um": 1e-6, "µm": 1e-6,
-    "nm": 1e-9, "pm": 1e-12, "fm": 1e-15,
-    "mol/l": 1.0, "mmol/l": 1e-3, "umol/l": 1e-6,
-    "nmol/l": 1e-9, "pmol/l": 1e-12,
+    "m": 1.0,
+    "mm": 1e-3,
+    "um": 1e-6,
+    "µm": 1e-6,
+    "nm": 1e-9,
+    "pm": 1e-12,
+    "fm": 1e-15,
+    "mol/l": 1.0,
+    "mmol/l": 1e-3,
+    "umol/l": 1e-6,
+    "nmol/l": 1e-9,
+    "pmol/l": 1e-12,
 }
 SUPPORTED_TYPES = {"IC50", "Ki", "Kd", "EC50"}
 PIC50_MIN = 3.0
@@ -45,6 +53,7 @@ def standardize_activity_column(
         logger.info(f"Used pChEMBL for {mask.sum()} records")
     needs = df["pic50"].isna()
     if needs.sum() > 0 and value_col in df.columns and unit_col in df.columns:
+
         def _convert(row):
             try:
                 if pd.isna(row[value_col]) or pd.isna(row[unit_col]):
@@ -53,13 +62,16 @@ def standardize_activity_column(
                 return ic50_to_pic50(molar) if molar is not None else None
             except Exception:
                 return None
+
         converted = df[needs].apply(_convert, axis=1)
         df.loc[needs, "pic50"] = converted.values
         logger.info(f"Converted raw values for {converted.notna().sum()} records")
     return df
 
 
-def filter_to_supported_types(df: pd.DataFrame, type_col: str = "activity_type") -> pd.DataFrame:
+def filter_to_supported_types(
+    df: pd.DataFrame, type_col: str = "activity_type"
+) -> pd.DataFrame:
     if type_col not in df.columns:
         return df
     n = len(df)

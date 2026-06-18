@@ -1,3 +1,5 @@
+"""Structured logger factory: each module gets a named logger with a consistent format."""
+
 from __future__ import annotations
 
 import logging
@@ -17,5 +19,6 @@ def get_logger(name: str, level: int = logging.INFO) -> logging.Logger:
     )
     handler.setFormatter(formatter)
     logger.addHandler(handler)
+    # Disable propagation to root logger so we don't get duplicate output
     logger.propagate = False
     return logger

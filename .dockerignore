@@ -1,0 +1,36 @@
+# ── Python artefacts ──────────────────────────────────────────────────────────
+.venv/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+*.egg-info/
+dist/
+build/
+
+# ── Large offline-pipeline data (not needed in serving images) ────────────────
+# Docking binaries and prepared files
+data/docking/
+# Raw ChEMBL downloads
+data/raw/
+# Processed feature parquets (models are serialised as pkl, not parquet)
+data/processed/
+
+# ── Large torch checkpoints (GRU generator — offline-only) ────────────────────
+models/generator/*.pt
+
+# ── Dev / CI ──────────────────────────────────────────────────────────────────
+tests/
+scripts/
+notebooks/
+logs/
+requirements/dev.txt
+requirements/gnn.txt
+requirements/colab.txt
+requirements/ml.txt
+
+# ── Secrets / editor noise ────────────────────────────────────────────────────
+.env
+.git/
+.gitignore
+*.md

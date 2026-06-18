@@ -1,0 +1,182 @@
+{
+  "best_epoch": 22,
+  "best_val_loss": 0.3656,
+  "total_epochs": 30,
+  "total_time_s": 1093.4,
+  "n_train": 1213,
+  "n_val": 134,
+  "checkpoint": "C:\\Users\\unsol\\Desktop\\egfr-l858r-drug-discovery\\models\\generator\\egfr_finetuned_gru.pt",
+  "warm_started": true,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.0453197767860012,
+      "val_loss": 0.8403012951215109
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.7081901807534067,
+      "val_loss": 0.6600420673688253
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.5742864985215036,
+      "val_loss": 0.5724663933118185
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.4951294864478864,
+      "val_loss": 0.5157340963681539
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.4402282253692025,
+      "val_loss": 0.474735160668691
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.40054489907465485,
+      "val_loss": 0.4507838785648346
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.3695880864795886,
+      "val_loss": 0.4346594711144765
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.34439045504519816,
+      "val_loss": 0.4177786509195964
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.3229026543466668,
+      "val_loss": 0.40493302543958026
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.3041087467419474,
+      "val_loss": 0.3965529203414917
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.28862749118553965,
+      "val_loss": 0.38972840706507367
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.28016991050619827,
+      "val_loss": 0.38001640637715656
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.26737174313319356,
+      "val_loss": 0.37662993868192035
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.2561249921196385,
+      "val_loss": 0.37308643261591595
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.24614455197986804,
+      "val_loss": 0.3699268301328023
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.23983112056004374,
+      "val_loss": 0.3704252342383067
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.23341553619033412,
+      "val_loss": 0.3715905447800954
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.2260098912213978,
+      "val_loss": 0.37615305185317993
+    },
+    {
+      "epoch": 19,
+      "train_loss": 0.2221147253325111,
+      "val_loss": 0.37234442432721454
+    },
+    {
+      "epoch": 20,
+      "train_loss": 0.21702037673247487,
+      "val_loss": 0.36938735842704773
+    },
+    {
+      "epoch": 21,
+      "train_loss": 0.21238622539921811,
+      "val_loss": 0.3705085813999176
+    },
+    {
+      "epoch": 22,
+      "train_loss": 0.20913590020255038,
+      "val_loss": 0.36557260155677795
+    },
+    {
+      "epoch": 23,
+      "train_loss": 0.20344147164570658,
+      "val_loss": 0.37061317761739093
+    },
+    {
+      "epoch": 24,
+      "train_loss": 0.20288339414094625,
+      "val_loss": 0.36803176005681354
+    },
+    {
+      "epoch": 25,
+      "train_loss": 0.19862105736607,
+      "val_loss": 0.37076427539189655
+    },
+    {
+      "epoch": 26,
+      "train_loss": 0.19524797483494408,
+      "val_loss": 0.36957307656606037
+    },
+    {
+      "epoch": 27,
+      "train_loss": 0.19256051120005155,
+      "val_loss": 0.36593801776568097
+    },
+    {
+      "epoch": 28,
+      "train_loss": 0.19036997227292313,
+      "val_loss": 0.3717163602511088
+    },
+    {
+      "epoch": 29,
+      "train_loss": 0.18458900561458186,
+      "val_loss": 0.37203986446062726
+    },
+    {
+      "epoch": 30,
+      "train_loss": 0.18077737092971802,
+      "val_loss": 0.37159796555836994
+    }
+  ],
+  "stage": "egfr_finetune",
+  "base_ckpt": "C:\\Users\\unsol\\Desktop\\egfr-l858r-drug-discovery\\models\\generator\\pretrained_base_gru.pt",
+  "egfr_corpus_size": 1347,
+  "vocab_size": 43,
+  "generation": {
+    "n_sample": 1000,
+    "temperature": 1.0,
+    "n_generated": 1000,
+    "n_valid": 791,
+    "n_unique": 673,
+    "n_novel": 420,
+    "validity": 0.791,
+    "uniqueness": 0.8508,
+    "novelty": 0.6241,
+    "n_scaffolds": 370,
+    "scaffold_diversity": 0.5498,
+    "n_novel_scaffolds": 181,
+    "scaffold_novelty": 0.4892
+  },
+  "note": "GRU fine-tuned on EGFR/ErbB2 actives from a MOSES drug-like base. Validity/diversity reflect grammar learned from the base; novelty and scaffold_novelty are measured against the EGFR corpus. EXPLORATORY: downstream activity scoring uses the in-sample backbone."
+}

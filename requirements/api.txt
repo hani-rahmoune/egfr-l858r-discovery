@@ -1,0 +1,4 @@
+# Phase 24 — FastAPI fast-screen service (serves precomputed models only)
+fastapi>=0.110
+uvicorn>=0.27
+httpx>=0.27   # also used by starlette TestClient in tests

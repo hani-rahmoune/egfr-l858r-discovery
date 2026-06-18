@@ -1,0 +1,37 @@
+{
+  "best_epoch": 1,
+  "best_val_loss": 2.2697,
+  "total_epochs": 1,
+  "total_time_s": 47.6,
+  "n_train": 1900,
+  "n_val": 100,
+  "checkpoint": "C:\\Users\\unsol\\Desktop\\egfr-l858r-drug-discovery\\models\\generator\\pretrained_base_gru.pt",
+  "warm_started": false,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 2.8464771509170532,
+      "val_loss": 2.2696638107299805
+    }
+  ],
+  "stage": "base_pretrain",
+  "drug_like_corpus_size": 2000,
+  "egfr_corpus_size": 1347,
+  "vocab_size": 43,
+  "generation": {
+    "n_sample": 30,
+    "temperature": 1.0,
+    "n_generated": 30,
+    "n_valid": 1,
+    "n_unique": 1,
+    "n_novel": 1,
+    "validity": 0.0333,
+    "uniqueness": 1.0,
+    "novelty": 1.0,
+    "n_scaffolds": 1,
+    "scaffold_diversity": 1.0,
+    "n_novel_scaffolds": 0,
+    "scaffold_novelty": 0.0
+  },
+  "note": "Base GRU pretrained on MOSES drug-like corpus for SMILES grammar + diversity. Fine-tune on EGFR actives via scripts/finetune_generator.py before scoring."
+}

@@ -1,0 +1,46 @@
+structures:
+  l858r:
+    pdb_id: 2ITZ
+    resolution_angstrom: 2.8
+    chain: A
+    construct: EGFR 696-1022
+    mutation: L858R
+    co_crystal_ligand: IRE
+    reference: Yun CH et al., Cancer Cell 2007 PMID:17376547
+    prepared_pdb: data/docking/protein/2ITZ_prepared.pdb
+    receptor_pdbqt: data/docking/protein/2ITZ_receptor.pdbqt
+    ligand_pdb: data/docking/protein/2ITZ_ligand.pdb
+    ligand_pdbqt: data/docking/protein/2ITZ_ligand_rigid.pdbqt
+  wild_type:
+    pdb_id: 2ITY
+    resolution_angstrom: 3.42
+    chain: A
+    construct: EGFR 696-1022
+    mutation: wild_type
+    co_crystal_ligand: IRE
+    reference: Yun CH et al., Cancer Cell 2007 PMID:17376547
+    prepared_pdb: data/docking/protein/2ITY_prepared.pdb
+    receptor_pdbqt: data/docking/protein/2ITY_receptor.pdbqt
+    ligand_pdb: data/docking/protein/2ITY_ligand.pdb
+    ligand_pdbqt: data/docking/protein/2ITY_ligand_rigid.pdbqt
+box:
+  center_x: -51.654
+  center_y: -1.266
+  center_z: -21.945
+  size_x: 22.5
+  size_y: 22.5
+  size_z: 22.5
+preparation:
+  chain: A
+  ligand_resname: IRE
+  ph: 7.4
+  remove_waters: true
+  remove_ions: true
+  add_hydrogens: true
+  keep_altloc: A
+excluded_structures:
+- 5UGA
+- 5UG8
+- 5UGC
+- 5UWD
+- 4I21

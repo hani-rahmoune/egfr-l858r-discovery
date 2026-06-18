@@ -1,0 +1,25 @@
+{
+  "verdict": "PASS",
+  "verdict_detail": "Gefitinib favours L858R (delta=-0.368 kcal/mol < 0). Directionally consistent with Yun et al. 2007.",
+  "compounds": [
+    {
+      "compound": "gefitinib",
+      "L858R_score": -7.86,
+      "WT_score": -7.492,
+      "delta": -0.368
+    },
+    {
+      "compound": "erlotinib",
+      "L858R_score": -7.666,
+      "WT_score": -7.263,
+      "delta": -0.403
+    },
+    {
+      "compound": "osimertinib",
+      "L858R_score": -7.944,
+      "WT_score": -7.306,
+      "delta": -0.638
+    }
+  ],
+  "note": "EXPLORATORY. Rigid receptor. n=3 compounds. Scoring-function approximation."
+}

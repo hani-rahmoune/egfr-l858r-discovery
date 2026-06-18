@@ -1,3 +1,5 @@
+"""SMILES validation, canonicalisation, mixture removal, and heavy-atom filtering."""
+
 from __future__ import annotations
 
 import pandas as pd
@@ -22,6 +24,7 @@ def standardize_smiles(smiles: str) -> str | None:
     if mol is None:
         return None
     try:
+        # Strip salts, normalize bonds, remove formal charges in that order
         mol = rdMolStandardize.LargestFragmentChooser().choose(mol)
         mol = rdMolStandardize.Normalizer().normalize(mol)
         mol = rdMolStandardize.Uncharger().uncharge(mol)
@@ -49,7 +52,9 @@ def add_canonical_smiles(df: pd.DataFrame, smiles_col: str = "smiles") -> pd.Dat
     return df.dropna(subset=["canonical_smiles"]).reset_index(drop=True)
 
 
-def remove_mixtures(df: pd.DataFrame, smiles_col: str = "canonical_smiles") -> pd.DataFrame:
+def remove_mixtures(
+    df: pd.DataFrame, smiles_col: str = "canonical_smiles"
+) -> pd.DataFrame:
     df = df.copy()
     is_mix = df[smiles_col].str.contains(r"\.", regex=False, na=False)
     if is_mix.sum() > 0:
@@ -115,7 +120,9 @@ def filter_by_heavy_atom_count(
     return df[mask].reset_index(drop=True)
 
 
-def run_full_cleaning_pipeline(df: pd.DataFrame, smiles_col: str = "smiles") -> pd.DataFrame:
+def run_full_cleaning_pipeline(
+    df: pd.DataFrame, smiles_col: str = "smiles"
+) -> pd.DataFrame:
     logger.info(f"Cleaning pipeline start: {len(df)} records")
     df = remove_invalid_smiles(df, smiles_col=smiles_col)
     df = add_canonical_smiles(df, smiles_col=smiles_col)

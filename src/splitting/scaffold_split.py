@@ -1,3 +1,5 @@
+"""Bemis-Murcko scaffold splitting: no scaffold appears in more than one data split."""
+
 from __future__ import annotations
 
 from collections import defaultdict
@@ -37,7 +39,9 @@ def assign_scaffolds(
     df["scaffold"] = df[smiles_col].apply(
         lambda s: get_bemis_murcko_scaffold(s) or "no_scaffold"
     )
-    logger.info(f"Found {df['scaffold'].nunique()} unique scaffolds for {len(df)} molecules")
+    logger.info(
+        f"Found {df['scaffold'].nunique()} unique scaffolds for {len(df)} molecules"
+    )
     return df
 
 
@@ -60,7 +64,9 @@ def scaffold_split(
 
     With scarce L858R data the test set may be small — this is expected and logged.
     """
-    assert abs(train_ratio + val_ratio + test_ratio - 1.0) < 1e-6, "Ratios must sum to 1.0"
+    assert (
+        abs(train_ratio + val_ratio + test_ratio - 1.0) < 1e-6
+    ), "Ratios must sum to 1.0"
 
     df = assign_scaffolds(df, smiles_col=smiles_col)
 
@@ -69,7 +75,7 @@ def scaffold_split(
     for idx, scaffold in enumerate(df["scaffold"]):
         scaffold_to_indices[scaffold].append(idx)
 
-    # Largest scaffold groups first, then shuffle for reproducibility
+    # Sort largest-first then shuffle: prevents all large scaffolds from landing in train
     scaffold_groups = sorted(scaffold_to_indices.values(), key=len, reverse=True)
     np.random.default_rng(seed).shuffle(scaffold_groups)
 
@@ -107,7 +113,11 @@ def scaffold_split(
         )
 
     # Verify no leakage
-    t, v, s = set(train_df["scaffold"]), set(val_df["scaffold"]), set(test_df["scaffold"])
+    t, v, s = (
+        set(train_df["scaffold"]),
+        set(val_df["scaffold"]),
+        set(test_df["scaffold"]),
+    )
     if t & v or t & s or v & s:
         logger.warning("Scaffold leakage detected between splits")
     else:

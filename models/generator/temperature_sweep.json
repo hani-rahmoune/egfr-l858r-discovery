@@ -1,0 +1,63 @@
+{
+  "n_per_temp": 1000,
+  "checkpoint": "C:\\Users\\unsol\\Desktop\\egfr-l858r-drug-discovery\\models\\generator\\egfr_finetuned_gru.pt",
+  "sweep": [
+    {
+      "temperature": 1.0,
+      "n_generated": 1000,
+      "n_valid": 810,
+      "n_unique": 707,
+      "n_novel": 443,
+      "validity": 0.81,
+      "uniqueness": 0.8728,
+      "novelty": 0.6266,
+      "n_scaffolds": 370,
+      "scaffold_diversity": 0.5233,
+      "n_novel_scaffolds": 184,
+      "scaffold_novelty": 0.4973
+    },
+    {
+      "temperature": 0.9,
+      "n_generated": 1000,
+      "n_valid": 842,
+      "n_unique": 678,
+      "n_novel": 397,
+      "validity": 0.842,
+      "uniqueness": 0.8052,
+      "novelty": 0.5855,
+      "n_scaffolds": 350,
+      "scaffold_diversity": 0.5162,
+      "n_novel_scaffolds": 154,
+      "scaffold_novelty": 0.44
+    },
+    {
+      "temperature": 0.8,
+      "n_generated": 1000,
+      "n_valid": 923,
+      "n_unique": 681,
+      "n_novel": 373,
+      "validity": 0.923,
+      "uniqueness": 0.7378,
+      "novelty": 0.5477,
+      "n_scaffolds": 341,
+      "scaffold_diversity": 0.5007,
+      "n_novel_scaffolds": 128,
+      "scaffold_novelty": 0.3754
+    },
+    {
+      "temperature": 0.7,
+      "n_generated": 1000,
+      "n_valid": 945,
+      "n_unique": 595,
+      "n_novel": 302,
+      "validity": 0.945,
+      "uniqueness": 0.6296,
+      "novelty": 0.5076,
+      "n_scaffolds": 281,
+      "scaffold_diversity": 0.4723,
+      "n_novel_scaffolds": 89,
+      "scaffold_novelty": 0.3167
+    }
+  ],
+  "note": "Temperature sweep on the EGFR fine-tuned GRU. Lower temperature raises validity at some cost to diversity. No retraining performed."
+}

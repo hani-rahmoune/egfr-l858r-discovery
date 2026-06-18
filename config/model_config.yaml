@@ -29,6 +29,11 @@ fingerprints:
     n_bits: 2048
     include_descriptors: false
 
+  topological_torsion:
+    type: topological_torsion
+    n_bits: 2048
+    include_descriptors: false
+
   morgan_ecfp4_desc:
     type: morgan
     radius: 2
@@ -86,17 +91,67 @@ docking_proxy:
   max_active_fraction: 0.50
 
 generator:
+  # Base pretrain: large generic drug-like corpus (MOSES) to learn SMILES grammar
+  # and scaffold diversity. CPU-bound, so the corpus is capped and epochs are few
+  # (char-GRU grammar converges fast); domain specificity is recovered in finetune.
   pretrain:
+    embed_dim: 128
     hidden_size: 512
     num_layers: 3
     dropout: 0.1
-    batch_size: 128
+    batch_size: 256
     lr: 0.001
-    epochs: 30
-  rl:
-    episodes: 500
+    epochs: 8
+    max_len: 120
+    patience: 3
+    val_fraction: 0.05
+    seed: 42
+    max_corpus: 80000          # cap drug-like corpus for feasible CPU training
+  # Finetune: warm-start from the base checkpoint, train on the ~1347 EGFR/ErbB2
+  # actives with a lower LR so it adapts without forgetting valid grammar.
+  finetune:
     batch_size: 64
-    sigma: 0.5
+    lr: 0.0005
+    epochs: 40
+    patience: 8
+    val_fraction: 0.10
+    seed: 42
+  # Operating sampling temperature chosen by scripts/sample_temperature_sweep.py:
+  # 0.8 gives 92.3% validity while keeping scaffold diversity ~0.50.
+  sample_temperature: 0.8
+  # RL fine-tuning: REINVENT-style augmented-log-likelihood policy gradient.
+  # Warm-starts from egfr_finetuned_gru.pt; frozen prior prevents unbounded drift.
+  # sigma balances reward vs prior regularisation. The first run at sigma=0.5 with
+  # no diversity filter REWARD-HACKED (mode collapse to ~14 scaffolds); this config
+  # lowers sigma to 0.25 and adds a scaffold-memory diversity filter.
+  rl:
+    n_steps: 50            # shorter run to limit runaway collapse
+    batch_size: 64         # SMILES generated and scored per step
+    sigma: 0.25            # tighter prior regularisation (was 0.5 — overpowered prior)
+    lr: 0.0001             # Adam learning rate for agent
+    max_len: 120           # max token length (must match generator)
+    temperature: 1.0       # sampling temperature during RL (full stochastic)
+    eval_n_sample: 512     # molecules sampled for pre/post evaluation
+    seed: 42
+    # Scaffold-memory diversity filter (Blaschke et al. 2020): once bucket_size
+    # high-reward molecules share a Murcko scaffold, later ones get reward=penalty.
+    # This is the explicit anti-collapse guard the flat novelty_bonus could not give.
+    diversity_filter:
+      enabled: true
+      bucket_size: 25      # molecules per scaffold before saturation
+      min_score: 0.30      # only count molecules scoring above this
+      penalty: 0.0         # reward assigned to saturated-scaffold molecules
+    reward:
+      activity_weight: 0.50       # weight on sigmoid(pIC50 - center) * AD_cf
+      activity_center: 7.00       # pIC50 sigmoid inflection (~10 nM IC50)
+      qed_weight: 0.20            # weight on QED score [0, 1]
+      admet_bonus: 0.20           # flat bonus for ADMET pass
+      novelty_bonus: 0.10         # flat bonus for novel (not in training set)
+      invalid_penalty: -1.00      # returned immediately for unparseable SMILES
+      covalent_penalty: -0.30     # electrophilic warhead detected
+      out_of_domain_penalty: -0.30  # AD: out_of_domain (backbone prediction unsafe)
+      borderline_penalty: -0.10   # AD: borderline
+      range_penalty: -0.10        # MW < 100/> 600 or LogP < -2/> 5.5
 
 selectivity:
   strong_mutant_threshold: 1.0
@@ -113,8 +168,18 @@ applicability_domain:
     out_of_domain: 0.50
 
 ranking:
+  # Legacy v1 weights (four-axis mutant-activity scheme; kept for reference).
   weights:
     mutant_activity: 0.35
     selectivity: 0.25
     docking: 0.20
     admet: 0.20
+  # Phase 23 v2 composite (src/scoring/ranking.py). Each component is min-max
+  # normalised across the candidate set, weighted, then multiplied by the AD
+  # confidence_factor. Covalent flag and within-noise selectivity are warnings,
+  # not score penalties.
+  weights_v2:
+    activity: 0.30             # backbone pred_pIC50
+    docking_selectivity: 0.30  # -(L858R - WT) Vina delta
+    docking_affinity: 0.20     # -L858R Vina score
+    admet: 0.20                # QED

@@ -1,3 +1,5 @@
+"""Load YAML configs and environment variables; resolve all paths against project root."""
+
 from __future__ import annotations
 
 import os
@@ -7,6 +9,7 @@ from typing import Any
 import yaml
 from dotenv import load_dotenv
 
+# Two parents up from src/utils/config.py reaches the repo root
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 load_dotenv(PROJECT_ROOT / ".env")
 

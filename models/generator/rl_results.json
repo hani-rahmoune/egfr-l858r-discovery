@@ -1,0 +1,561 @@
+{
+  "n_steps": 50,
+  "batch_size": 64,
+  "sigma": 0.25,
+  "lr": 0.0001,
+  "temperature": 1.0,
+  "eval_n": 512,
+  "diversity_filter": {
+    "enabled": true,
+    "bucket_size": 25,
+    "min_score": 0.3,
+    "penalty": 0.0,
+    "n_scaffolds_seen": 494,
+    "n_scaffolds_saturated": 12,
+    "n_molecules_penalized": 412
+  },
+  "pre_rl": {
+    "n_generated": 512,
+    "n_valid": 476,
+    "n_unique": 381,
+    "n_novel": 189,
+    "validity": 0.9297,
+    "uniqueness": 0.8004,
+    "novelty": 0.4961,
+    "n_scaffolds": 221,
+    "scaffold_diversity": 0.5801,
+    "n_novel_scaffolds": 67,
+    "scaffold_novelty": 0.3032,
+    "mean_pic50": 6.712,
+    "admet_pass_rate": 0.312,
+    "in_domain_rate": 0.884,
+    "n_candidates": 189
+  },
+  "post_rl": {
+    "n_generated": 512,
+    "n_valid": 492,
+    "n_unique": 333,
+    "n_novel": 178,
+    "validity": 0.9609,
+    "uniqueness": 0.6768,
+    "novelty": 0.5345,
+    "n_scaffolds": 189,
+    "scaffold_diversity": 0.5676,
+    "n_novel_scaffolds": 67,
+    "scaffold_novelty": 0.3545,
+    "mean_pic50": 6.716,
+    "admet_pass_rate": 0.483,
+    "in_domain_rate": 0.871,
+    "n_candidates": 178
+  },
+  "comparison": {
+    "verdict": "INCONCLUSIVE",
+    "detail": "pIC50 change < 0.10 \u2014 RL did not move the needle",
+    "table": "\n  Metric                    Pre-RL   Post-RL    Delta  Dir\n  ----------------------------------------------------------\n  Validity                  93.0%     96.1%    +0.031  ^\n  Uniqueness                80.0%     67.7%    -0.124  v\n  Scaffold diversity        0.580     0.568    -0.012  v\n  Mean pred pIC50           6.712     6.716    +0.004  -\n  ADMET pass rate           31.2%     48.3%    +0.171  ^\n  In-domain rate            88.4%     87.1%    -0.013  v"
+  },
+  "step_log": [
+    {
+      "loss": 0.021914849057793617,
+      "mean_reward": 0.08050170540809631,
+      "mean_reward_raw": 0.08050170540809631,
+      "n_penalized": 0,
+      "mean_nll_agent": 0.3095002770423889,
+      "mean_nll_prior": 0.2797805070877075,
+      "validity": 0.796875,
+      "step": 1
+    },
+    {
+      "loss": 0.01666541025042534,
+      "mean_reward": 0.03754333406686783,
+      "mean_reward_raw": 0.03754333406686783,
+      "n_penalized": 0,
+      "mean_nll_agent": 0.2832567095756531,
+      "mean_nll_prior": 0.2581649124622345,
+      "validity": 0.8125,
+      "step": 2
+    },
+    {
+      "loss": 0.020750096067786217,
+      "mean_reward": 0.1313776671886444,
+      "mean_reward_raw": 0.1313776671886444,
+      "n_penalized": 0,
+      "mean_nll_agent": 0.2666570842266083,
+      "mean_nll_prior": 0.24374549090862274,
+      "validity": 0.84375,
+      "step": 3
+    },
+    {
+      "loss": 0.01817457564175129,
+      "mean_reward": 0.026698559522628784,
+      "mean_reward_raw": 0.026698559522628784,
+      "n_penalized": 0,
+      "mean_nll_agent": 0.2740442454814911,
+      "mean_nll_prior": 0.258717805147171,
+      "validity": 0.796875,
+      "step": 4
+    },
+    {
+      "loss": 0.018924372270703316,
+      "mean_reward": 0.224957674741745,
+      "mean_reward_raw": 0.224957674741745,
+      "n_penalized": 0,
+      "mean_nll_agent": 0.2878943979740143,
+      "mean_nll_prior": 0.27272194623947144,
+      "validity": 0.90625,
+      "step": 5
+    },
+    {
+      "loss": 0.024814849719405174,
+      "mean_reward": 0.10467368364334106,
+      "mean_reward_raw": 0.10467368364334106,
+      "n_penalized": 0,
+      "mean_nll_agent": 0.2806532680988312,
+      "mean_nll_prior": 0.27116358280181885,
+      "validity": 0.8125,
+      "step": 6
+    },
+    {
+      "loss": 0.022528357803821564,
+      "mean_reward": 0.16351492702960968,
+      "mean_reward_raw": 0.16351492702960968,
+      "n_penalized": 0,
+      "mean_nll_agent": 0.2828267216682434,
+      "mean_nll_prior": 0.2735353112220764,
+      "validity": 0.84375,
+      "step": 7
+    },
+    {
+      "loss": 0.021548818796873093,
+      "mean_reward": 0.10125308483839035,
+      "mean_reward_raw": 0.18871405720710754,
+      "n_penalized": 8,
+      "mean_nll_agent": 0.31144970655441284,
+      "mean_nll_prior": 0.30003994703292847,
+      "validity": 0.84375,
+      "step": 8
+    },
+    {
+      "loss": 0.019438575953245163,
+      "mean_reward": 0.1832645982503891,
+      "mean_reward_raw": 0.22959855198860168,
+      "n_penalized": 5,
+      "mean_nll_agent": 0.2617570459842682,
+      "mean_nll_prior": 0.2514149844646454,
+      "validity": 0.859375,
+      "step": 9
+    },
+    {
+      "loss": 0.025085076689720154,
+      "mean_reward": -0.1134062334895134,
+      "mean_reward_raw": -0.04817843437194824,
+      "n_penalized": 6,
+      "mean_nll_agent": 0.34359151124954224,
+      "mean_nll_prior": 0.33795619010925293,
+      "validity": 0.6875,
+      "step": 10
+    },
+    {
+      "loss": 0.01936194859445095,
+      "mean_reward": -0.014521688222885132,
+      "mean_reward_raw": 0.04848882555961609,
+      "n_penalized": 7,
+      "mean_nll_agent": 0.2990233600139618,
+      "mean_nll_prior": 0.28392595052719116,
+      "validity": 0.765625,
+      "step": 11
+    },
+    {
+      "loss": 0.01978818140923977,
+      "mean_reward": 0.09992462396621704,
+      "mean_reward_raw": 0.13495555520057678,
+      "n_penalized": 3,
+      "mean_nll_agent": 0.3064334988594055,
+      "mean_nll_prior": 0.3061532974243164,
+      "validity": 0.828125,
+      "step": 12
+    },
+    {
+      "loss": 0.01962098851799965,
+      "mean_reward": 0.1195046454668045,
+      "mean_reward_raw": 0.19073274731636047,
+      "n_penalized": 7,
+      "mean_nll_agent": 0.295097291469574,
+      "mean_nll_prior": 0.28691840171813965,
+      "validity": 0.828125,
+      "step": 13
+    },
+    {
+      "loss": 0.017447613179683685,
+      "mean_reward": 0.03455481305718422,
+      "mean_reward_raw": 0.08215061575174332,
+      "n_penalized": 5,
+      "mean_nll_agent": 0.284282386302948,
+      "mean_nll_prior": 0.2805168628692627,
+      "validity": 0.796875,
+      "step": 14
+    },
+    {
+      "loss": 0.02023908868432045,
+      "mean_reward": 0.10059913992881775,
+      "mean_reward_raw": 0.12373664975166321,
+      "n_penalized": 3,
+      "mean_nll_agent": 0.3304179906845093,
+      "mean_nll_prior": 0.323140412569046,
+      "validity": 0.8125,
+      "step": 15
+    },
+    {
+      "loss": 0.024623172357678413,
+      "mean_reward": 0.011979609727859497,
+      "mean_reward_raw": 0.09357605129480362,
+      "n_penalized": 7,
+      "mean_nll_agent": 0.30847394466400146,
+      "mean_nll_prior": 0.30568647384643555,
+      "validity": 0.78125,
+      "step": 16
+    },
+    {
+      "loss": 0.024106290191411972,
+      "mean_reward": -0.013339206576347351,
+      "mean_reward_raw": 0.12042127549648285,
+      "n_penalized": 13,
+      "mean_nll_agent": 0.3258920907974243,
+      "mean_nll_prior": 0.3313593864440918,
+      "validity": 0.765625,
+      "step": 17
+    },
+    {
+      "loss": 0.02867148630321026,
+      "mean_reward": 0.04783982038497925,
+      "mean_reward_raw": 0.08397088199853897,
+      "n_penalized": 4,
+      "mean_nll_agent": 0.30849701166152954,
+      "mean_nll_prior": 0.31121450662612915,
+      "validity": 0.765625,
+      "step": 18
+    },
+    {
+      "loss": 0.023733146488666534,
+      "mean_reward": 0.01869630627334118,
+      "mean_reward_raw": 0.0973982885479927,
+      "n_penalized": 7,
+      "mean_nll_agent": 0.30203011631965637,
+      "mean_nll_prior": 0.2983380854129791,
+      "validity": 0.78125,
+      "step": 19
+    },
+    {
+      "loss": 0.02453209087252617,
+      "mean_reward": -0.026492677628993988,
+      "mean_reward_raw": 0.05930972844362259,
+      "n_penalized": 8,
+      "mean_nll_agent": 0.3135867714881897,
+      "mean_nll_prior": 0.3126846253871918,
+      "validity": 0.75,
+      "step": 20
+    },
+    {
+      "loss": 0.023130567744374275,
+      "mean_reward": 0.09048879891633987,
+      "mean_reward_raw": 0.14571207761764526,
+      "n_penalized": 6,
+      "mean_nll_agent": 0.3011425733566284,
+      "mean_nll_prior": 0.29138827323913574,
+      "validity": 0.828125,
+      "step": 21
+    },
+    {
+      "loss": 0.018956784158945084,
+      "mean_reward": 0.1493256837129593,
+      "mean_reward_raw": 0.21377195417881012,
+      "n_penalized": 6,
+      "mean_nll_agent": 0.28997349739074707,
+      "mean_nll_prior": 0.28062957525253296,
+      "validity": 0.859375,
+      "step": 22
+    },
+    {
+      "loss": 0.019578702747821808,
+      "mean_reward": -0.014993371441960335,
+      "mean_reward_raw": 0.07319513708353043,
+      "n_penalized": 8,
+      "mean_nll_agent": 0.28765809535980225,
+      "mean_nll_prior": 0.28175264596939087,
+      "validity": 0.78125,
+      "step": 23
+    },
+    {
+      "loss": 0.016463156789541245,
+      "mean_reward": 0.2546118199825287,
+      "mean_reward_raw": 0.29633262753486633,
+      "n_penalized": 4,
+      "mean_nll_agent": 0.2816771864891052,
+      "mean_nll_prior": 0.283672958612442,
+      "validity": 0.921875,
+      "step": 24
+    },
+    {
+      "loss": 0.018697891384363174,
+      "mean_reward": 0.1824294626712799,
+      "mean_reward_raw": 0.2210417538881302,
+      "n_penalized": 5,
+      "mean_nll_agent": 0.24976181983947754,
+      "mean_nll_prior": 0.24769918620586395,
+      "validity": 0.859375,
+      "step": 25
+    },
+    {
+      "loss": 0.02014174312353134,
+      "mean_reward": 0.1334577202796936,
+      "mean_reward_raw": 0.2047933042049408,
+      "n_penalized": 7,
+      "mean_nll_agent": 0.3013308346271515,
+      "mean_nll_prior": 0.3081165552139282,
+      "validity": 0.84375,
+      "step": 26
+    },
+    {
+      "loss": 0.02133740857243538,
+      "mean_reward": -0.02787666767835617,
+      "mean_reward_raw": 0.09622807800769806,
+      "n_penalized": 13,
+      "mean_nll_agent": 0.30045217275619507,
+      "mean_nll_prior": 0.2979789674282074,
+      "validity": 0.78125,
+      "step": 27
+    },
+    {
+      "loss": 0.025363096967339516,
+      "mean_reward": 0.1498107612133026,
+      "mean_reward_raw": 0.20149493217468262,
+      "n_penalized": 6,
+      "mean_nll_agent": 0.26193302869796753,
+      "mean_nll_prior": 0.27282005548477173,
+      "validity": 0.84375,
+      "step": 28
+    },
+    {
+      "loss": 0.018746020272374153,
+      "mean_reward": 0.20226845145225525,
+      "mean_reward_raw": 0.29243597388267517,
+      "n_penalized": 8,
+      "mean_nll_agent": 0.2801518738269806,
+      "mean_nll_prior": 0.2914542257785797,
+      "validity": 0.890625,
+      "step": 29
+    },
+    {
+      "loss": 0.016419075429439545,
+      "mean_reward": 0.09518864750862122,
+      "mean_reward_raw": 0.20782455801963806,
+      "n_penalized": 10,
+      "mean_nll_agent": 0.28216832876205444,
+      "mean_nll_prior": 0.28909504413604736,
+      "validity": 0.84375,
+      "step": 30
+    },
+    {
+      "loss": 0.0207979753613472,
+      "mean_reward": -0.009545799344778061,
+      "mean_reward_raw": 0.0920097604393959,
+      "n_penalized": 11,
+      "mean_nll_agent": 0.3156719207763672,
+      "mean_nll_prior": 0.3217581808567047,
+      "validity": 0.765625,
+      "step": 31
+    },
+    {
+      "loss": 0.018883489072322845,
+      "mean_reward": 0.07448075711727142,
+      "mean_reward_raw": 0.20449694991111755,
+      "n_penalized": 14,
+      "mean_nll_agent": 0.2832068204879761,
+      "mean_nll_prior": 0.2847464084625244,
+      "validity": 0.84375,
+      "step": 32
+    },
+    {
+      "loss": 0.01894991286098957,
+      "mean_reward": 0.0646805539727211,
+      "mean_reward_raw": 0.147159144282341,
+      "n_penalized": 9,
+      "mean_nll_agent": 0.2968900501728058,
+      "mean_nll_prior": 0.2820030152797699,
+      "validity": 0.8125,
+      "step": 33
+    },
+    {
+      "loss": 0.013403571210801601,
+      "mean_reward": 0.13496077060699463,
+      "mean_reward_raw": 0.231416717171669,
+      "n_penalized": 10,
+      "mean_nll_agent": 0.2706064283847809,
+      "mean_nll_prior": 0.2741962969303131,
+      "validity": 0.90625,
+      "step": 34
+    },
+    {
+      "loss": 0.013478505425155163,
+      "mean_reward": 0.21000662446022034,
+      "mean_reward_raw": 0.3100058436393738,
+      "n_penalized": 11,
+      "mean_nll_agent": 0.29212072491645813,
+      "mean_nll_prior": 0.29833418130874634,
+      "validity": 0.90625,
+      "step": 35
+    },
+    {
+      "loss": 0.013057677075266838,
+      "mean_reward": 0.17733259499073029,
+      "mean_reward_raw": 0.3473106920719147,
+      "n_penalized": 18,
+      "mean_nll_agent": 0.2699330747127533,
+      "mean_nll_prior": 0.2749328911304474,
+      "validity": 0.921875,
+      "step": 36
+    },
+    {
+      "loss": 0.02009906806051731,
+      "mean_reward": 0.12732702493667603,
+      "mean_reward_raw": 0.20271943509578705,
+      "n_penalized": 8,
+      "mean_nll_agent": 0.27145811915397644,
+      "mean_nll_prior": 0.2727225422859192,
+      "validity": 0.84375,
+      "step": 37
+    },
+    {
+      "loss": 0.015758056193590164,
+      "mean_reward": 0.07911190390586853,
+      "mean_reward_raw": 0.16964182257652283,
+      "n_penalized": 11,
+      "mean_nll_agent": 0.2906152009963989,
+      "mean_nll_prior": 0.28077074885368347,
+      "validity": 0.84375,
+      "step": 38
+    },
+    {
+      "loss": 0.02275615558028221,
+      "mean_reward": -0.038612715899944305,
+      "mean_reward_raw": 0.06774969398975372,
+      "n_penalized": 12,
+      "mean_nll_agent": 0.30382856726646423,
+      "mean_nll_prior": 0.3051992654800415,
+      "validity": 0.75,
+      "step": 39
+    },
+    {
+      "loss": 0.01861301064491272,
+      "mean_reward": 0.12151207029819489,
+      "mean_reward_raw": 0.21664321422576904,
+      "n_penalized": 9,
+      "mean_nll_agent": 0.3106188476085663,
+      "mean_nll_prior": 0.30517828464508057,
+      "validity": 0.875,
+      "step": 40
+    },
+    {
+      "loss": 0.01618470624089241,
+      "mean_reward": 0.09135273098945618,
+      "mean_reward_raw": 0.2102298140525818,
+      "n_penalized": 12,
+      "mean_nll_agent": 0.2764064073562622,
+      "mean_nll_prior": 0.27532342076301575,
+      "validity": 0.875,
+      "step": 41
+    },
+    {
+      "loss": 0.017783211544156075,
+      "mean_reward": 0.03553226217627525,
+      "mean_reward_raw": 0.17665061354637146,
+      "n_penalized": 16,
+      "mean_nll_agent": 0.29678139090538025,
+      "mean_nll_prior": 0.29547932744026184,
+      "validity": 0.84375,
+      "step": 42
+    },
+    {
+      "loss": 0.01620650291442871,
+      "mean_reward": 0.14530393481254578,
+      "mean_reward_raw": 0.275858998298645,
+      "n_penalized": 13,
+      "mean_nll_agent": 0.2748814821243286,
+      "mean_nll_prior": 0.272571861743927,
+      "validity": 0.875,
+      "step": 43
+    },
+    {
+      "loss": 0.02373734675347805,
+      "mean_reward": 0.03229258209466934,
+      "mean_reward_raw": 0.11410804092884064,
+      "n_penalized": 9,
+      "mean_nll_agent": 0.3554486334323883,
+      "mean_nll_prior": 0.33818691968917847,
+      "validity": 0.796875,
+      "step": 44
+    },
+    {
+      "loss": 0.012228780426084995,
+      "mean_reward": 0.044746868312358856,
+      "mean_reward_raw": 0.22766926884651184,
+      "n_penalized": 20,
+      "mean_nll_agent": 0.264309287071228,
+      "mean_nll_prior": 0.26621389389038086,
+      "validity": 0.875,
+      "step": 45
+    },
+    {
+      "loss": 0.014453606680035591,
+      "mean_reward": 0.049880947917699814,
+      "mean_reward_raw": 0.22455444931983948,
+      "n_penalized": 19,
+      "mean_nll_agent": 0.2674636244773865,
+      "mean_nll_prior": 0.2581906020641327,
+      "validity": 0.859375,
+      "step": 46
+    },
+    {
+      "loss": 0.01510535553097725,
+      "mean_reward": 0.18307501077651978,
+      "mean_reward_raw": 0.2817040979862213,
+      "n_penalized": 11,
+      "mean_nll_agent": 0.26905637979507446,
+      "mean_nll_prior": 0.2679694592952728,
+      "validity": 0.90625,
+      "step": 47
+    },
+    {
+      "loss": 0.017134936526417732,
+      "mean_reward": 0.004491707310080528,
+      "mean_reward_raw": 0.1745353639125824,
+      "n_penalized": 19,
+      "mean_nll_agent": 0.29604625701904297,
+      "mean_nll_prior": 0.29708924889564514,
+      "validity": 0.84375,
+      "step": 48
+    },
+    {
+      "loss": 0.017977815121412277,
+      "mean_reward": 0.12448699027299881,
+      "mean_reward_raw": 0.26130616664886475,
+      "n_penalized": 15,
+      "mean_nll_agent": 0.2877512574195862,
+      "mean_nll_prior": 0.296561598777771,
+      "validity": 0.875,
+      "step": 49
+    },
+    {
+      "loss": 0.027349304407835007,
+      "mean_reward": 0.04114963859319687,
+      "mean_reward_raw": 0.12859465181827545,
+      "n_penalized": 9,
+      "mean_nll_agent": 0.30224698781967163,
+      "mean_nll_prior": 0.3097360134124756,
+      "validity": 0.796875,
+      "step": 50
+    }
+  ],
+  "log_csv": "C:\\Users\\unsol\\Desktop\\egfr-l858r-drug-discovery\\logs\\rl_training.log",
+  "checkpoint": "C:\\Users\\unsol\\Desktop\\egfr-l858r-drug-discovery\\models\\generator\\rl_finetuned_gru.pt",
+  "note": "EXPLORATORY. RL-tuned GRU, REINVENT augmented-NLL objective with scaffold-memory diversity filter. Backbone pIC50 is in-sample; AD guards against OOD reward hacking; scaffold memory guards against mode collapse. Apply docking post-hoc to top-ranked hits; do not use raw pIC50 as ground truth."
+}

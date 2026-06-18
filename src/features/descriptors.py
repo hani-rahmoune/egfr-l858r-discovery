@@ -1,8 +1,10 @@
+"""Eleven fixed RDKit physicochemical descriptors appended to every fingerprint vector."""
+
 from __future__ import annotations
 
 import numpy as np
 from rdkit import Chem
-from rdkit.Chem import Descriptors, QED, rdMolDescriptors
+from rdkit.Chem import QED, Descriptors, rdMolDescriptors
 
 from src.utils.logging import get_logger
 
@@ -10,9 +12,17 @@ logger = get_logger(__name__)
 
 # Fixed order, never change — models depend on this exact sequence
 DESCRIPTOR_NAMES = [
-    "mol_weight", "logp", "tpsa", "hbd", "hba",
-    "rotatable_bonds", "aromatic_rings", "ring_count",
-    "fraction_csp3", "formal_charge", "qed",
+    "mol_weight",
+    "logp",
+    "tpsa",
+    "hbd",
+    "hba",
+    "rotatable_bonds",
+    "aromatic_rings",
+    "ring_count",
+    "fraction_csp3",
+    "formal_charge",
+    "qed",
 ]
 
 
@@ -79,8 +89,12 @@ def check_lipinski(smiles: str) -> dict:
     hba = rdMolDescriptors.CalcNumHBA(mol)
     violations = sum([mw > 500, logp > 5, hbd > 5, hba > 10])
     return {
-        "mol_weight": mw, "logp": logp, "hbd": hbd, "hba": hba,
-        "violations": violations, "lipinski_pass": violations <= 1,
+        "mol_weight": mw,
+        "logp": logp,
+        "hbd": hbd,
+        "hba": hba,
+        "violations": violations,
+        "lipinski_pass": violations <= 1,
     }
 
 
@@ -91,4 +105,8 @@ def check_veber(smiles: str) -> dict:
         return {"veber_pass": False}
     tpsa = Descriptors.TPSA(mol)
     rot = rdMolDescriptors.CalcNumRotatableBonds(mol)
-    return {"tpsa": tpsa, "rotatable_bonds": rot, "veber_pass": tpsa <= 140 and rot <= 10}
+    return {
+        "tpsa": tpsa,
+        "rotatable_bonds": rot,
+        "veber_pass": tpsa <= 140 and rot <= 10,
+    }

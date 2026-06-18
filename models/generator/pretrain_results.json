@@ -1,0 +1,175 @@
+{
+  "best_epoch": 27,
+  "best_val_loss": 0.4195,
+  "total_epochs": 30,
+  "total_time_s": 1684.4,
+  "n_train": 1213,
+  "n_val": 134,
+  "checkpoint": "C:\\Users\\unsol\\Desktop\\egfr-l858r-drug-discovery\\models\\generator\\pretrained_gru.pt",
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 2.4558780130587126,
+      "val_loss": 1.9681790272394817
+    },
+    {
+      "epoch": 2,
+      "train_loss": 1.6786994181181256,
+      "val_loss": 1.4967321157455444
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.3251233853791888,
+      "val_loss": 1.243491252263387
+    },
+    {
+      "epoch": 4,
+      "train_loss": 1.1071987779516923,
+      "val_loss": 1.071030616760254
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.9521878079364174,
+      "val_loss": 0.934731642405192
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.8336110460130792,
+      "val_loss": 0.8189602692921957
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.7385828557767367,
+      "val_loss": 0.7396922707557678
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.6622801109364158,
+      "val_loss": 0.6729689041773478
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.5981972625381068,
+      "val_loss": 0.6337796250979105
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.5429841970142565,
+      "val_loss": 0.5961096088091532
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.4976387227836408,
+      "val_loss": 0.5683125257492065
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.4656018614768982,
+      "val_loss": 0.5299006700515747
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.43200858643180445,
+      "val_loss": 0.5064739187558492
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.39944547101071004,
+      "val_loss": 0.49726178248723346
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.37580180168151855,
+      "val_loss": 0.4845944245656331
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.3565526102718554,
+      "val_loss": 0.47875167926152545
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.3362297980408919,
+      "val_loss": 0.4580716093381246
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.31660664238427816,
+      "val_loss": 0.4515574375788371
+    },
+    {
+      "epoch": 19,
+      "train_loss": 0.3054993732979423,
+      "val_loss": 0.44951021671295166
+    },
+    {
+      "epoch": 20,
+      "train_loss": 0.29415398992990194,
+      "val_loss": 0.45051900545756024
+    },
+    {
+      "epoch": 21,
+      "train_loss": 0.27964922472050313,
+      "val_loss": 0.4456966718037923
+    },
+    {
+      "epoch": 22,
+      "train_loss": 0.27182748600056295,
+      "val_loss": 0.43106388052304584
+    },
+    {
+      "epoch": 23,
+      "train_loss": 0.259175842529849,
+      "val_loss": 0.4323256015777588
+    },
+    {
+      "epoch": 24,
+      "train_loss": 0.2515295147895813,
+      "val_loss": 0.4375088115533193
+    },
+    {
+      "epoch": 25,
+      "train_loss": 0.24928853307899676,
+      "val_loss": 0.4410446882247925
+    },
+    {
+      "epoch": 26,
+      "train_loss": 0.24153690589101692,
+      "val_loss": 0.43413124481836957
+    },
+    {
+      "epoch": 27,
+      "train_loss": 0.23105772231754504,
+      "val_loss": 0.41948313514391583
+    },
+    {
+      "epoch": 28,
+      "train_loss": 0.22610728285814585,
+      "val_loss": 0.4302508036295573
+    },
+    {
+      "epoch": 29,
+      "train_loss": 0.2207286499048534,
+      "val_loss": 0.4342171649138133
+    },
+    {
+      "epoch": 30,
+      "train_loss": 0.21720569384725472,
+      "val_loss": 0.4378935694694519
+    }
+  ],
+  "corpus_size": 1347,
+  "vocab_size": 43,
+  "generation": {
+    "n_sample": 1000,
+    "temperature": 1.0,
+    "n_generated": 1000,
+    "n_valid": 563,
+    "n_unique": 468,
+    "n_novel": 302,
+    "validity": 0.563,
+    "uniqueness": 0.8313,
+    "novelty": 0.6453
+  },
+  "note": "EXPLORATORY. Pretrained on ~1347 EGFR/ErbB2 kinase inhibitors. Generated hits are scored by the exploratory backbone model \u2014 doubly exploratory. Label all generated candidates accordingly."
+}

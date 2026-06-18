@@ -1,0 +1,5 @@
+# Phase 25 — Streamlit dashboard over the API / local pipeline
+streamlit>=1.30
+altair>=5.0      # bundled with streamlit; pinned for the charts
+requests>=2.31   # api_client talks to the FastAPI service
+# Local-scoring fallback reuses the API ModelRegistry — see requirements/api.txt

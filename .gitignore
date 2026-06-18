@@ -1,22 +1,53 @@
-@'
+# ── Python ──────────────────────────────────────────────────────────────────────
 .venv/
 __pycache__/
+*.pyc
+*.pyo
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+*.egg-info/
+dist/
+build/
 
+# ── Logs ─────────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── MLflow experiment store ──────────────────────────────────────────────────────
+mlruns/
+
+# ── Data (raw inputs, derived CSVs, docking structures, generated outputs) ───────
 data/raw/
 data/interim/
 data/processed/
+data/external/
+data/docking/
 data/generated/
-models/
-mlruns/
 
+# ── Binary model artifacts (JSON results in models/ ARE tracked) ─────────────────
+models/**/*.pkl
+models/**/*.joblib
+models/**/*.pt
+models/**/*.pth
+models/**/*.npy
+
+# ── Secrets and credentials (never commit real values) ───────────────────────────
 .env
-*.pkl
-*.joblib
-*.pt
-*.pth
-*.npy
-*.csv
-'@ | Set-Content .gitignore
+*.env
+*service-account*.json
+service_account.json
+credentials.json
+*_credentials.json
+*api_key*
+*apikey*
+*.pem
+*.key
+
+# ── OS and editor ────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~

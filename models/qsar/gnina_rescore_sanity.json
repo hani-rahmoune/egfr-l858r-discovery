@@ -1,0 +1,67 @@
+{
+  "verdict": "BORDERLINE",
+  "verdict_detail": "CNN favours L858R on 2/3 compounds. Fails on: osimertinib (delta near zero). Direction criterion NOT fully met. Treat CNNaffinity as unreliable; keep Vina-only.",
+  "compounds": [
+    {
+      "compound": "gefitinib",
+      "L858R": {
+        "affinity_kcal": -7.86185,
+        "cnn_score": 0.4794,
+        "cnn_affinity_pkd": 6.69269,
+        "cnn_variance": 1.46309
+      },
+      "WT": {
+        "affinity_kcal": -7.4939,
+        "cnn_score": 0.34939,
+        "cnn_affinity_pkd": 6.38941,
+        "cnn_variance": 1.50163
+      },
+      "delta_cnn_affinity_pkd": 0.3033,
+      "delta_cnn_affinity_kcal": 0.413,
+      "delta_cnn_score": 0.13,
+      "delta_vina_kcal": -0.368,
+      "direction_cnn_affinity": "L858R_favoured"
+    },
+    {
+      "compound": "erlotinib",
+      "L858R": {
+        "affinity_kcal": -7.66869,
+        "cnn_score": 0.34329,
+        "cnn_affinity_pkd": 5.90938,
+        "cnn_variance": 1.08619
+      },
+      "WT": {
+        "affinity_kcal": -7.26776,
+        "cnn_score": 0.0786,
+        "cnn_affinity_pkd": 5.6701,
+        "cnn_variance": 0.98323
+      },
+      "delta_cnn_affinity_pkd": 0.2393,
+      "delta_cnn_affinity_kcal": 0.326,
+      "delta_cnn_score": 0.2647,
+      "delta_vina_kcal": -0.403,
+      "direction_cnn_affinity": "L858R_favoured"
+    },
+    {
+      "compound": "osimertinib",
+      "L858R": {
+        "affinity_kcal": -7.94472,
+        "cnn_score": 0.16135,
+        "cnn_affinity_pkd": 5.70762,
+        "cnn_variance": 0.98191
+      },
+      "WT": {
+        "affinity_kcal": -7.30545,
+        "cnn_score": 0.04843,
+        "cnn_affinity_pkd": 5.75569,
+        "cnn_variance": 1.65599
+      },
+      "delta_cnn_affinity_pkd": -0.0481,
+      "delta_cnn_affinity_kcal": -0.066,
+      "delta_cnn_score": 0.1129,
+      "delta_vina_kcal": -0.638,
+      "direction_cnn_affinity": "WT_favoured"
+    }
+  ],
+  "note": "EXPLORATORY. GNINA v1.0 CPU (WSL2), no GPU. CNN not EGFR-specific. n=3 compounds. Best Vina pose rescored (no re-docking). CNNaffinity in pKd; multiply by 1.363 kcal/mol per pKd unit for kcal/mol."
+}
