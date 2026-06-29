@@ -490,6 +490,7 @@ def main() -> None:
         page_limitations()
     elif page == "Discovery Copilot":
         from src.dashboard.copilot_page import page_copilot
+
         page_copilot()
 
 

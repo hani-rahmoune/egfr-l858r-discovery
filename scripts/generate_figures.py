@@ -55,8 +55,18 @@ def fig_qsar_vs_gnn():
     """R^2 mean +/- std for QSAR (XGB/RF) and GNN across both tasks."""
     # QSAR 5-seed numbers from eval_seed_stability.py (no JSON artifact):
     qsar = {
-        "general": {"r2_mean": 0.438, "r2_std": 0.143, "rmse_mean": 1.010, "rmse_std": 0.167},
-        "wt_proxy": {"r2_mean": 0.507, "r2_std": 0.063, "rmse_mean": 0.942, "rmse_std": 0.061},
+        "general": {
+            "r2_mean": 0.438,
+            "r2_std": 0.143,
+            "rmse_mean": 1.010,
+            "rmse_std": 0.167,
+        },
+        "wt_proxy": {
+            "r2_mean": 0.507,
+            "r2_std": 0.063,
+            "rmse_mean": 0.942,
+            "rmse_std": 0.061,
+        },
     }
 
     # GNN numbers from models/gnn/*/metadata.json (real artifact)
@@ -78,7 +88,16 @@ def fig_qsar_vs_gnn():
         stds = [qsar[task]["r2_std"], gnn[task]["test_r2"]["std"]]
         colors = [BLUE, ORANGE]
         x = np.arange(len(labels))
-        bars = ax.bar(x, means, yerr=stds, color=colors, alpha=0.8, capsize=6, width=0.5, ecolor="#555555")
+        bars = ax.bar(
+            x,
+            means,
+            yerr=stds,
+            color=colors,
+            alpha=0.8,
+            capsize=6,
+            width=0.5,
+            ecolor="#555555",
+        )
         ax.set_xticks(x)
         ax.set_xticklabels(labels)
         ax.set_ylabel("Test R^2 (5-seed mean +/- std)")
@@ -95,7 +114,9 @@ def fig_qsar_vs_gnn():
                 fontsize=8,
             )
 
-    fig.suptitle("QSAR vs GNN: 5-seed scaffold-split R^2\n(QSAR wins both tasks)", y=1.01)
+    fig.suptitle(
+        "QSAR vs GNN: 5-seed scaffold-split R^2\n(QSAR wins both tasks)", y=1.01
+    )
     fig.tight_layout()
     out = FIGURES_DIR / "fig1_qsar_vs_gnn.png"
     fig.savefig(out, bbox_inches="tight")
@@ -140,7 +161,16 @@ def fig_fingerprint_ablation():
         stds = [fp_data[k]["best"]["val_rmse_std"] for k in fp_order]
         y = np.arange(len(names))
         colors = [BLUE if k == "morgan_ecfp6" else GREY for k in fp_order]
-        ax.barh(y, vals, xerr=stds, color=colors, alpha=0.85, capsize=4, ecolor="#555555", height=0.55)
+        ax.barh(
+            y,
+            vals,
+            xerr=stds,
+            color=colors,
+            alpha=0.85,
+            capsize=4,
+            ecolor="#555555",
+            height=0.55,
+        )
         ax.set_yticks(y)
         ax.set_yticklabels(names)
         ax.invert_yaxis()
@@ -151,7 +181,10 @@ def fig_fingerprint_ablation():
 
     axes[0].set_title("EGFR general (ECFP6 wins, margin within noise)")
     axes[1].set_title("WT-proxy (ECFP6 wins, slight margin)")
-    fig.suptitle("Fingerprint ablation: val RMSE by representation\n(ECFP4 kept for production -- ECFP6 margin within seed noise)", y=1.02)
+    fig.suptitle(
+        "Fingerprint ablation: val RMSE by representation\n(ECFP4 kept for production -- ECFP6 margin within seed noise)",
+        y=1.02,
+    )
     fig.tight_layout()
     out = FIGURES_DIR / "fig2_fingerprint_ablation.png"
     fig.savefig(out, bbox_inches="tight")
@@ -189,7 +222,8 @@ def fig_docking_selectivity():
     ax.barh(y, deltas, color=colors, alpha=0.8, height=0.6)
     # error bars for noise
     ax.errorbar(
-        deltas, y,
+        deltas,
+        y,
         xerr=noise_half,
         fmt="none",
         ecolor="#333333",
@@ -201,7 +235,9 @@ def fig_docking_selectivity():
     ax.set_yticklabels(cids, fontsize=8)
     ax.invert_yaxis()
     ax.set_xlabel("Selectivity delta (L858R - WT, kcal/mol)\n<0 = L858R-favoured")
-    ax.set_title("Docking selectivity: top-15 compounds\nerror bars = +/-1.5 x seed std (noise threshold)")
+    ax.set_title(
+        "Docking selectivity: top-15 compounds\nerror bars = +/-1.5 x seed std (noise threshold)"
+    )
 
     legend_handles = [
         mpatches.Patch(color=GREEN, label="L858R-selective (confident)"),
@@ -246,15 +282,33 @@ def fig_rl_comparison():
     r1_vals = [post_run1[m] for m in metrics]
     r2_vals = [post_run2[m] for m in metrics]
 
-    bars_pre = ax.bar(x - width, pre_vals, width, label="Pre-RL (base)", color=BLUE, alpha=0.85)
-    bars_r1 = ax.bar(x, r1_vals, width, label="Post-RL Run 1 (sigma=0.5, REWARD_HACKING)", color=RED, alpha=0.85)
-    bars_r2 = ax.bar(x + width, r2_vals, width, label="Post-RL Run 2 (sigma=0.25 + diversity filter, INCONCLUSIVE)", color=ORANGE, alpha=0.85)
+    bars_pre = ax.bar(
+        x - width, pre_vals, width, label="Pre-RL (base)", color=BLUE, alpha=0.85
+    )
+    bars_r1 = ax.bar(
+        x,
+        r1_vals,
+        width,
+        label="Post-RL Run 1 (sigma=0.5, REWARD_HACKING)",
+        color=RED,
+        alpha=0.85,
+    )
+    bars_r2 = ax.bar(
+        x + width,
+        r2_vals,
+        width,
+        label="Post-RL Run 2 (sigma=0.25 + diversity filter, INCONCLUSIVE)",
+        color=ORANGE,
+        alpha=0.85,
+    )
 
     ax.set_xticks(x)
     ax.set_xticklabels(metric_labels)
     ax.set_ylabel("Rate [0, 1]")
     ax.set_ylim(0, 1.12)
-    ax.set_title("RL fine-tuning: Run 1 collapses uniqueness; Run 2 holds diversity but flat pIC50")
+    ax.set_title(
+        "RL fine-tuning: Run 1 collapses uniqueness; Run 2 holds diversity but flat pIC50"
+    )
     ax.legend(fontsize=8, loc="upper right")
 
     # Annotate uniqueness drop in Run 1
@@ -304,17 +358,20 @@ def fig_final_ranking():
     # Mark covalent warning with hatching
     for i, (row, warn) in enumerate(zip(top.itertuples(), has_warning)):
         if warn:
-            ax.barh(i, row.final_score, color=colors[i], alpha=0.4, height=0.65, hatch="//")
+            ax.barh(
+                i, row.final_score, color=colors[i], alpha=0.4, height=0.65, hatch="//"
+            )
 
     ax.set_yticks(y)
-    labels = [
-        f"{row.cid} ({row.source})"
-        for row in top.itertuples()
-    ]
+    labels = [f"{row.cid} ({row.source})" for row in top.itertuples()]
     ax.set_yticklabels(labels, fontsize=8)
     ax.invert_yaxis()
-    ax.set_xlabel("Final composite score (0.30 activity + 0.30 docking-selectivity\n+ 0.20 docking-affinity + 0.20 ADMET, min-max normalised)")
-    ax.set_title("Top 25 final-ranked candidates\n(hatched = covalent or Brenk warning)")
+    ax.set_xlabel(
+        "Final composite score (0.30 activity + 0.30 docking-selectivity\n+ 0.20 docking-affinity + 0.20 ADMET, min-max normalised)"
+    )
+    ax.set_title(
+        "Top 25 final-ranked candidates\n(hatched = covalent or Brenk warning)"
+    )
 
     legend_handles = [
         mpatches.Patch(color=BLUE, label="Known library"),

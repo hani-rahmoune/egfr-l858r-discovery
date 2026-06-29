@@ -17,23 +17,29 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from src.agent.controller import classify_intent, handle
 from src.agent.schemas import AgentRequest, AgentResponse
 
-
 # ── Mock registry ──────────────────────────────────────────────────────────────
 
 
 class _MockRegistry:
     def score(self, smiles: str) -> dict:
         from rdkit import Chem
+
         from src.features.covalent import detect_warheads
         from src.scoring.ranking import build_warnings
 
         mol = Chem.MolFromSmiles(smiles) if smiles else None
         if mol is None:
             return {
-                "smiles": smiles, "canonical_smiles": None, "valid": False,
-                "pic50_mutant": None, "pic50_wt": None, "selectivity_proxy": None,
-                "covalent": False, "warheads": [],
-                "admet": None, "applicability_domain": None,
+                "smiles": smiles,
+                "canonical_smiles": None,
+                "valid": False,
+                "pic50_mutant": None,
+                "pic50_wt": None,
+                "selectivity_proxy": None,
+                "covalent": False,
+                "warheads": [],
+                "admet": None,
+                "applicability_domain": None,
                 "docking_selectivity_available": False,
                 "warnings": ["Invalid SMILES: RDKit could not parse the input."],
             }
@@ -41,14 +47,29 @@ class _MockRegistry:
         warheads = detect_warheads(canonical)
         domain = "in_domain"
         return {
-            "smiles": smiles, "canonical_smiles": canonical, "valid": True,
-            "pic50_mutant": 7.5, "pic50_wt": 7.0, "selectivity_proxy": 0.5,
-            "covalent": bool(warheads), "warheads": warheads,
-            "admet": {"status": "pass", "qed": 0.65, "sa_score": 2.5,
-                      "lipinski_pass": True, "veber_pass": True,
-                      "pains_alerts": [], "brenk_alerts": [], "flag_reasons": []},
-            "applicability_domain": {"domain": domain, "max_tanimoto": 0.75,
-                                     "confidence_factor": 1.0},
+            "smiles": smiles,
+            "canonical_smiles": canonical,
+            "valid": True,
+            "pic50_mutant": 7.5,
+            "pic50_wt": 7.0,
+            "selectivity_proxy": 0.5,
+            "covalent": bool(warheads),
+            "warheads": warheads,
+            "admet": {
+                "status": "pass",
+                "qed": 0.65,
+                "sa_score": 2.5,
+                "lipinski_pass": True,
+                "veber_pass": True,
+                "pains_alerts": [],
+                "brenk_alerts": [],
+                "flag_reasons": [],
+            },
+            "applicability_domain": {
+                "domain": domain,
+                "max_tanimoto": 0.75,
+                "confidence_factor": 1.0,
+            },
             "docking_selectivity_available": False,
             "warnings": build_warnings(domain, bool(warheads), warheads, None),
         }
@@ -63,23 +84,26 @@ def reg():
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("query,expected", [
-    ("Predict the activity for this SMILES: CCO", "single_predict"),
-    ("Score this molecule: c1ccccc1", "single_predict"),
-    ("batch screen these SMILES", "batch_predict"),
-    ("Compare cmpd_015 and cmpd_024", "comparison"),
-    ("cmpd_015 vs cmpd_002 which is better", "comparison"),
-    ("Look up cmpd_024 in the ranking", "candidate_lookup"),
-    ("What is the rank of gen_005?", "candidate_lookup"),
-    ("docking results for cmpd_015", "docking_query"),
-    ("What is the Vina score for gen_005?", "docking_query"),
-    ("Generate a report for cmpd_015", "report"),
-    ("summary for cmpd_002", "report"),
-    ("What is LOOCV?", "project_qa"),
-    ("How does the scaffold split work?", "project_qa"),
-    ("Why did RL fail?", "project_qa"),
-    ("Explain the ADMET filters", "project_qa"),
-])
+@pytest.mark.parametrize(
+    "query,expected",
+    [
+        ("Predict the activity for this SMILES: CCO", "single_predict"),
+        ("Score this molecule: c1ccccc1", "single_predict"),
+        ("batch screen these SMILES", "batch_predict"),
+        ("Compare cmpd_015 and cmpd_024", "comparison"),
+        ("cmpd_015 vs cmpd_002 which is better", "comparison"),
+        ("Look up cmpd_024 in the ranking", "candidate_lookup"),
+        ("What is the rank of gen_005?", "candidate_lookup"),
+        ("docking results for cmpd_015", "docking_query"),
+        ("What is the Vina score for gen_005?", "docking_query"),
+        ("Generate a report for cmpd_015", "report"),
+        ("summary for cmpd_002", "report"),
+        ("What is LOOCV?", "project_qa"),
+        ("How does the scaffold split work?", "project_qa"),
+        ("Why did RL fail?", "project_qa"),
+        ("Explain the ADMET filters", "project_qa"),
+    ],
+)
 def test_classify_intent(query, expected):
     assert classify_intent(query) == expected
 
@@ -137,7 +161,9 @@ def test_handle_batch_no_smiles(reg):
 
 @pytest.mark.unit
 def test_handle_candidate_lookup_known(reg):
-    req = AgentRequest(query="Look up cmpd_015 in the ranking", candidate_ids=["cmpd_015"])
+    req = AgentRequest(
+        query="Look up cmpd_015 in the ranking", candidate_ids=["cmpd_015"]
+    )
     resp = handle(req, registry=reg)
     assert resp.intent == "candidate_lookup"
     assert "cmpd_015" in resp.answer
@@ -215,6 +241,7 @@ def test_handle_report(reg):
 @pytest.mark.unit
 def test_handle_report_no_forbidden_claims(reg):
     from src.agent.guardrails import find_forbidden_claims
+
     req = AgentRequest(
         query="Generate a report for cmpd_015",
         candidate_ids=["cmpd_015"],

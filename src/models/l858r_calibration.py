@@ -27,8 +27,6 @@ the training L858R molecules to avoid in-sample overfitting.
 
 from __future__ import annotations
 
-from typing import Any
-
 import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
@@ -44,6 +42,7 @@ EXPLORATORY_LABEL = "[EXPLORATORY — Model 3]"
 
 
 # ── Calibrators ───────────────────────────────────────────────────────────────
+
 
 class MeanShiftCalibrator:
     """
@@ -119,6 +118,7 @@ class RidgeCalibrator:
 
 # ── LOOCV runner ──────────────────────────────────────────────────────────────
 
+
 def _train_rf_backbone(
     X: np.ndarray,
     y: np.ndarray,
@@ -186,11 +186,13 @@ def run_loocv(
     rf_cfg = (model_cfg or {}).get("qsar", {}).get("random_forest", {})
 
     l858r_mask = general_df["mutation_flag"] == "L858R"
-    l858r_idx  = general_df.index[l858r_mask].tolist()
-    n_l858r    = len(l858r_idx)
+    l858r_idx = general_df.index[l858r_mask].tolist()
+    n_l858r = len(l858r_idx)
 
     if n_l858r < 5:
-        raise ValueError(f"Expected ≥5 L858R molecules, found {n_l858r}. Check general_df.")
+        raise ValueError(
+            f"Expected ≥5 L858R molecules, found {n_l858r}. Check general_df."
+        )
 
     logger.info(
         f"{EXPLORATORY_LABEL} LOOCV on {n_l858r} L858R molecules, "
@@ -210,49 +212,53 @@ def run_loocv(
         logger.info(f"{EXPLORATORY_LABEL} seed={seed}: running {n_l858r} LOO folds …")
 
         preds_backbone = np.zeros(n_l858r)
-        preds_shift    = np.zeros(n_l858r)
-        preds_ridge    = np.zeros(n_l858r)
+        preds_shift = np.zeros(n_l858r)
+        preds_ridge = np.zeros(n_l858r)
 
         for fold_i, held_out_row in enumerate(l858r_idx):
-            held_out_smiles = general_df.loc[held_out_row, "canonical_smiles"]
-
             # ── Build backbone training set: all general molecules minus held-out ──
             backbone_mask = general_df.index != held_out_row
-            backbone_df   = general_df[backbone_mask]
+            backbone_df = general_df[backbone_mask]
 
             X_back = backbone_df[feature_cols].values.astype(np.float32)
             y_back = backbone_df["pic50"].values.astype(np.float32)
 
             # ── Train backbone ────────────────────────────────────────────────────
             rf = _train_rf_backbone(
-                X_back, y_back, feature_cols, seed,
-                n_estimators=n_estimators_loo, rf_cfg=rf_cfg,
+                X_back,
+                y_back,
+                feature_cols,
+                seed,
+                n_estimators=n_estimators_loo,
+                rf_cfg=rf_cfg,
             )
 
             # ── OOB predictions for the 21 TRAINING L858R molecules ───────────────
             # These are out-of-bag predictions from the backbone, avoiding the
             # in-sample bias that would distort calibration training.
-            l858r_train_mask = (
-                (backbone_df["mutation_flag"] == "L858R").values
-            )
+            l858r_train_mask = (backbone_df["mutation_flag"] == "L858R").values
             l858r_train_positions = np.where(l858r_train_mask)[0]
 
-            oob_preds    = rf.oob_prediction_             # shape (n_backbone,)
+            oob_preds = rf.oob_prediction_  # shape (n_backbone,)
             y_back_train = oob_preds[l858r_train_positions]
             y_true_train = y_back[l858r_train_positions]
 
             # ── Direct prediction for held-out molecule ───────────────────────────
-            X_held = general_df.loc[[held_out_row], feature_cols].values.astype(np.float32)
+            X_held = general_df.loc[[held_out_row], feature_cols].values.astype(
+                np.float32
+            )
             X_held_df = pd.DataFrame(X_held, columns=feature_cols)
             y_back_test = float(rf.predict(X_held_df)[0])
 
             # ── Fit and apply calibrators ─────────────────────────────────────────
             shift_cal = MeanShiftCalibrator().fit(y_back_train, y_true_train)
-            ridge_cal = RidgeCalibrator(alpha=ridge_alpha).fit(y_back_train, y_true_train)
+            ridge_cal = RidgeCalibrator(alpha=ridge_alpha).fit(
+                y_back_train, y_true_train
+            )
 
             preds_backbone[fold_i] = y_back_test
-            preds_shift[fold_i]    = float(shift_cal.predict(np.array([y_back_test]))[0])
-            preds_ridge[fold_i]    = float(ridge_cal.predict(np.array([y_back_test]))[0])
+            preds_shift[fold_i] = float(shift_cal.predict(np.array([y_back_test]))[0])
+            preds_ridge[fold_i] = float(ridge_cal.predict(np.array([y_back_test]))[0])
 
             if (fold_i + 1) % 5 == 0 or fold_i == n_l858r - 1:
                 logger.info(
@@ -265,25 +271,27 @@ def run_loocv(
 
         # ── Compute Spearman r ────────────────────────────────────────────────────
         spear_backbone = float(spearmanr(y_true_global, preds_backbone).statistic)
-        spear_shift    = float(spearmanr(y_true_global, preds_shift).statistic)
-        spear_ridge    = float(spearmanr(y_true_global, preds_ridge).statistic)
+        spear_shift = float(spearmanr(y_true_global, preds_shift).statistic)
+        spear_ridge = float(spearmanr(y_true_global, preds_ridge).statistic)
 
-        rmse_backbone  = float(np.sqrt(mean_squared_error(y_true_global, preds_backbone)))
-        rmse_shift     = float(np.sqrt(mean_squared_error(y_true_global, preds_shift)))
-        rmse_ridge     = float(np.sqrt(mean_squared_error(y_true_global, preds_ridge)))
+        rmse_backbone = float(
+            np.sqrt(mean_squared_error(y_true_global, preds_backbone))
+        )
+        rmse_shift = float(np.sqrt(mean_squared_error(y_true_global, preds_shift)))
+        rmse_ridge = float(np.sqrt(mean_squared_error(y_true_global, preds_ridge)))
 
         per_seed[seed] = {
             "backbone_spearman": spear_backbone,
-            "shift_spearman":    spear_shift,
-            "ridge_spearman":    spear_ridge,
-            "backbone_rmse":     rmse_backbone,
-            "shift_rmse":        rmse_shift,
-            "ridge_rmse":        rmse_ridge,
+            "shift_spearman": spear_shift,
+            "ridge_spearman": spear_ridge,
+            "backbone_rmse": rmse_backbone,
+            "shift_rmse": rmse_shift,
+            "ridge_rmse": rmse_ridge,
         }
         pooled[seed] = {
             "backbone": preds_backbone.copy(),
-            "shift":    preds_shift.copy(),
-            "ridge":    preds_ridge.copy(),
+            "shift": preds_shift.copy(),
+            "ridge": preds_ridge.copy(),
         }
 
         logger.info(
@@ -299,23 +307,23 @@ def run_loocv(
 
     for method in methods:
         spear_key = f"{method}_spearman"
-        rmse_key  = f"{method}_rmse"
+        rmse_key = f"{method}_rmse"
         vals_spear = [per_seed[s][spear_key] for s in seeds]
-        vals_rmse  = [per_seed[s][rmse_key]  for s in seeds]
+        vals_rmse = [per_seed[s][rmse_key] for s in seeds]
         summary[method] = {
             "spearman_mean": float(np.mean(vals_spear)),
-            "spearman_std":  float(np.std(vals_spear)),
-            "rmse_mean":     float(np.mean(vals_rmse)),
-            "rmse_std":      float(np.std(vals_rmse)),
+            "spearman_std": float(np.std(vals_spear)),
+            "rmse_mean": float(np.mean(vals_rmse)),
+            "rmse_std": float(np.std(vals_rmse)),
         }
 
     return {
-        "per_seed":           per_seed,
-        "summary":            summary,
+        "per_seed": per_seed,
+        "summary": summary,
         "pooled_predictions": pooled,
-        "y_true":             y_true_global,
-        "n_l858r":            n_l858r,
-        "seeds":              seeds,
+        "y_true": y_true_global,
+        "n_l858r": n_l858r,
+        "seeds": seeds,
     }
 
 
@@ -326,14 +334,14 @@ def interpret_result(summary: dict) -> str:
     Returns a string starting with EXPLORATORY_LABEL.
     """
     back_mean = summary["backbone"]["spearman_mean"]
-    back_std  = summary["backbone"]["spearman_std"]
+    back_std = summary["backbone"]["spearman_std"]
 
     best_cal_method = max(
         ["shift", "ridge"],
         key=lambda m: summary[m]["spearman_mean"],
     )
     cal_mean = summary[best_cal_method]["spearman_mean"]
-    cal_std  = summary[best_cal_method]["spearman_std"]
+    cal_std = summary[best_cal_method]["spearman_std"]
 
     delta = cal_mean - back_mean
 

@@ -15,7 +15,6 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.agent.guardrails import (
     _BORDERLINE_CAVEAT,
-    _COVALENT_DOCKING_CAVEAT,
     _GENERATED_CAVEAT,
     _OOD_CAVEAT,
     _SELECTIVITY_CAVEAT,
@@ -24,7 +23,6 @@ from src.agent.guardrails import (
     sanitize_text,
 )
 from src.agent.schemas import DockingLookupResult, PredictToolResult
-
 
 # ── add_scientific_warnings ────────────────────────────────────────────────────
 
@@ -42,8 +40,7 @@ def test_selectivity_caveat_added():
 def test_selectivity_caveat_not_duplicated():
     """Caveat must not appear twice if already present."""
     result = PredictToolResult(
-        valid=True, smiles="C", selectivity_proxy=0.5,
-        warnings=[_SELECTIVITY_CAVEAT]
+        valid=True, smiles="C", selectivity_proxy=0.5, warnings=[_SELECTIVITY_CAVEAT]
     )
     warnings = add_scientific_warnings(result)
     assert warnings.count(_SELECTIVITY_CAVEAT) == 1
@@ -59,8 +56,11 @@ def test_no_selectivity_caveat_when_none():
 @pytest.mark.unit
 def test_covalent_caveat_added():
     result = PredictToolResult(
-        valid=True, smiles="C=CC(=O)NC", covalent=True, warheads=["acrylamide"],
-        warnings=[]
+        valid=True,
+        smiles="C=CC(=O)NC",
+        covalent=True,
+        warheads=["acrylamide"],
+        warnings=[],
     )
     warnings = add_scientific_warnings(result)
     assert any("covalent" in w.lower() or "warhead" in w.lower() for w in warnings)
@@ -77,18 +77,14 @@ def test_out_of_domain_caveat():
 
 @pytest.mark.unit
 def test_borderline_caveat():
-    result = PredictToolResult(
-        valid=True, smiles="C", domain="borderline", warnings=[]
-    )
+    result = PredictToolResult(valid=True, smiles="C", domain="borderline", warnings=[])
     warnings = add_scientific_warnings(result)
     assert _BORDERLINE_CAVEAT in warnings
 
 
 @pytest.mark.unit
 def test_in_domain_no_domain_caveat():
-    result = PredictToolResult(
-        valid=True, smiles="C", domain="in_domain", warnings=[]
-    )
+    result = PredictToolResult(valid=True, smiles="C", domain="in_domain", warnings=[])
     warnings = add_scientific_warnings(result)
     assert _OOD_CAVEAT not in warnings
     assert _BORDERLINE_CAVEAT not in warnings
@@ -96,9 +92,7 @@ def test_in_domain_no_domain_caveat():
 
 @pytest.mark.unit
 def test_generated_caveat():
-    result = PredictToolResult(
-        valid=True, smiles="C", warnings=[]
-    )
+    result = PredictToolResult(valid=True, smiles="C", warnings=[])
     result.source = "generated"  # type: ignore[attr-defined]
     warnings = add_scientific_warnings(result)
     assert _GENERATED_CAVEAT in warnings
@@ -107,12 +101,12 @@ def test_generated_caveat():
 @pytest.mark.unit
 def test_docking_caveat_from_docking_result():
     """DockingLookupResult with l858r_score should trigger the docking caveat."""
-    result = DockingLookupResult(
-        found=True, candidate_id="cmpd_015", l858r_score=-7.5
-    )
+    result = DockingLookupResult(found=True, candidate_id="cmpd_015", l858r_score=-7.5)
     warnings = add_scientific_warnings(result)
-    assert any("rigid" in w.lower() or "vina" in w.lower() or "docking" in w.lower()
-               for w in warnings)
+    assert any(
+        "rigid" in w.lower() or "vina" in w.lower() or "docking" in w.lower()
+        for w in warnings
+    )
 
 
 @pytest.mark.unit
@@ -129,30 +123,36 @@ def test_warnings_list_returned_not_mutated():
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("text,expected_claim", [
-    ("This compound is active against EGFR.", "is active"),
-    ("The molecule is selective for L858R.", "is selective"),
-    ("This is a drug candidate for NSCLC.", "drug candidate"),
-    ("The result was validated in a cell assay.", "validated"),
-    ("This finding is proven by experiment.", "proven"),
-    ("Binding was confirmed by SPR.", "confirmed"),
-])
+@pytest.mark.parametrize(
+    "text,expected_claim",
+    [
+        ("This compound is active against EGFR.", "is active"),
+        ("The molecule is selective for L858R.", "is selective"),
+        ("This is a drug candidate for NSCLC.", "drug candidate"),
+        ("The result was validated in a cell assay.", "validated"),
+        ("This finding is proven by experiment.", "proven"),
+        ("Binding was confirmed by SPR.", "confirmed"),
+    ],
+)
 def test_forbidden_claim_detected(text, expected_claim):
     found = find_forbidden_claims(text)
     assert expected_claim in found, f"Expected '{expected_claim}' in {found}"
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("text", [
-    "This compound is not active in any assay.",
-    "The molecule is not selective for L858R.",
-    "This is not a drug candidate.",
-    "The result was not validated experimentally.",
-    "This is unproven in cell lines.",
-    "Binding was not confirmed.",
-    "No confirmed activity has been established.",
-    "The pipeline has not been validated experimentally.",
-])
+@pytest.mark.parametrize(
+    "text",
+    [
+        "This compound is not active in any assay.",
+        "The molecule is not selective for L858R.",
+        "This is not a drug candidate.",
+        "The result was not validated experimentally.",
+        "This is unproven in cell lines.",
+        "Binding was not confirmed.",
+        "No confirmed activity has been established.",
+        "The pipeline has not been validated experimentally.",
+    ],
+)
 def test_negated_claim_passes(text):
     found = find_forbidden_claims(text)
     assert found == [], f"Unexpected claims found in '{text}': {found}"

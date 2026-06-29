@@ -26,10 +26,20 @@ from src.utils.logging import get_logger
 
 logger = get_logger(__name__)
 
-META_COLS: frozenset[str] = frozenset({
-    "pic50", "canonical_smiles", "mutation_flag", "source", "split",
-    "scaffold", "dataset", "binary_label", "activity_class", "smiles_valid",
-})
+META_COLS: frozenset[str] = frozenset(
+    {
+        "pic50",
+        "canonical_smiles",
+        "mutation_flag",
+        "source",
+        "split",
+        "scaffold",
+        "dataset",
+        "binary_label",
+        "activity_class",
+        "smiles_valid",
+    }
+)
 
 
 def get_feature_cols(df: pd.DataFrame) -> list[str]:
@@ -40,21 +50,21 @@ def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, float]:
     from scipy.stats import spearmanr
 
     return {
-        "rmse":       float(np.sqrt(mean_squared_error(y_true, y_pred))),
-        "mae":        float(mean_absolute_error(y_true, y_pred)),
-        "r2":         float(r2_score(y_true, y_pred)),
-        "pearson_r":  float(np.corrcoef(y_true, y_pred)[0, 1]),
+        "rmse": float(np.sqrt(mean_squared_error(y_true, y_pred))),
+        "mae": float(mean_absolute_error(y_true, y_pred)),
+        "r2": float(r2_score(y_true, y_pred)),
+        "pearson_r": float(np.corrcoef(y_true, y_pred)[0, 1]),
         "spearman_r": float(spearmanr(y_true, y_pred).statistic),
-        "n":          int(len(y_true)),
+        "n": int(len(y_true)),
     }
 
 
 def _build_candidates(cfg: dict) -> dict[str, Any]:
     """Instantiate unfitted model objects from model_config.yaml."""
-    from xgboost import XGBRegressor
     from lightgbm import LGBMRegressor
+    from xgboost import XGBRegressor
 
-    rf_cfg  = cfg.get("qsar", {}).get("random_forest", {})
+    rf_cfg = cfg.get("qsar", {}).get("random_forest", {})
     xgb_cfg = cfg.get("qsar", {}).get("xgboost", {})
     lgb_cfg = cfg.get("qsar", {}).get("lightgbm", {})
 
@@ -99,12 +109,12 @@ class QSARTrainer:
     """
 
     def __init__(self, model_cfg: dict) -> None:
-        self.model_cfg    = model_cfg
-        self.scaler       = StandardScaler()
-        self.best_name:   str | None = None
-        self.best_model:  Any = None
+        self.model_cfg = model_cfg
+        self.scaler = StandardScaler()
+        self.best_name: str | None = None
+        self.best_model: Any = None
         self.feature_cols: list[str] = []
-        self.val_metrics:  dict = {}
+        self.val_metrics: dict = {}
         self.test_metrics: dict = {}
 
     # ── public API ──────────────────────────────────────────────────────────
@@ -112,58 +122,66 @@ class QSARTrainer:
     def fit_from_parquet(self, parquet_path: Path, label: str = "") -> None:
         df = pd.read_parquet(parquet_path)
         if "split" not in df.columns:
-            raise ValueError(f"No 'split' column in {parquet_path}. Run assign_splits.py first.")
+            raise ValueError(
+                f"No 'split' column in {parquet_path}. Run assign_splits.py first."
+            )
 
         self.feature_cols = get_feature_cols(df)
-        logger.info(f"{label}: {len(df)} rows, {len(self.feature_cols)} features, "
-                    f"split counts: {df['split'].value_counts().to_dict()}")
+        logger.info(
+            f"{label}: {len(df)} rows, {len(self.feature_cols)} features, "
+            f"split counts: {df['split'].value_counts().to_dict()}"
+        )
 
         train = df[df["split"] == "train"]
-        val   = df[df["split"] == "val"]
-        test  = df[df["split"] == "test"]
+        val = df[df["split"] == "val"]
+        test = df[df["split"] == "test"]
 
         X_tr = train[self.feature_cols].values.astype(np.float32)
         y_tr = train["pic50"].values.astype(np.float32)
         X_val = val[self.feature_cols].values.astype(np.float32)
         y_val = val["pic50"].values.astype(np.float32)
-        X_te  = test[self.feature_cols].values.astype(np.float32)
-        y_te  = test["pic50"].values.astype(np.float32)
+        X_te = test[self.feature_cols].values.astype(np.float32)
+        y_te = test["pic50"].values.astype(np.float32)
 
-        # Fit scaler on train only
+        # Fit scaler on train only (persisted for inference; the tree models
+        # below train on the unscaled named DataFrames).
         self.scaler.fit(X_tr)
-        X_tr_s  = self.scaler.transform(X_tr)
-        X_val_s = self.scaler.transform(X_val)
-        X_te_s  = self.scaler.transform(X_te)
 
         candidates = _build_candidates(self.model_cfg)
 
         # Use named DataFrames for fit/predict so LightGBM's internal feature
         # names stay consistent with sklearn's validation on predict calls.
-        X_tr_df  = pd.DataFrame(X_tr,  columns=self.feature_cols)
+        X_tr_df = pd.DataFrame(X_tr, columns=self.feature_cols)
         X_val_df = pd.DataFrame(X_val, columns=self.feature_cols)
-        X_te_df  = pd.DataFrame(X_te,  columns=self.feature_cols)
+        X_te_df = pd.DataFrame(X_te, columns=self.feature_cols)
 
         best_val_rmse = float("inf")
         for name, model in candidates.items():
             logger.info(f"{label}: fitting {name} on {len(X_tr_df)} train rows …")
             model.fit(X_tr_df, y_tr)
-            val_pred   = model.predict(X_val_df)
-            val_m      = compute_metrics(y_val, val_pred)
+            val_pred = model.predict(X_val_df)
+            val_m = compute_metrics(y_val, val_pred)
             self.val_metrics[name] = val_m
-            logger.info(f"  {name} val  RMSE={val_m['rmse']:.3f}  R²={val_m['r2']:.3f}  "
-                        f"pearson_r={val_m['pearson_r']:.3f}")
+            logger.info(
+                f"  {name} val  RMSE={val_m['rmse']:.3f}  R²={val_m['r2']:.3f}  "
+                f"pearson_r={val_m['pearson_r']:.3f}"
+            )
             if val_m["rmse"] < best_val_rmse:
-                best_val_rmse  = val_m["rmse"]
+                best_val_rmse = val_m["rmse"]
                 self.best_name = name
                 self.best_model = model
 
-        logger.info(f"{label}: best model = {self.best_name}  (val RMSE {best_val_rmse:.3f})")
-        test_pred        = self.best_model.predict(X_te_df)
+        logger.info(
+            f"{label}: best model = {self.best_name}  (val RMSE {best_val_rmse:.3f})"
+        )
+        test_pred = self.best_model.predict(X_te_df)
         self.test_metrics = compute_metrics(y_te, test_pred)
-        logger.info(f"{label}: test  RMSE={self.test_metrics['rmse']:.3f}  "
-                    f"R²={self.test_metrics['r2']:.3f}  "
-                    f"pearson_r={self.test_metrics['pearson_r']:.3f}  "
-                    f"n={self.test_metrics['n']}")
+        logger.info(
+            f"{label}: test  RMSE={self.test_metrics['rmse']:.3f}  "
+            f"R²={self.test_metrics['r2']:.3f}  "
+            f"pearson_r={self.test_metrics['pearson_r']:.3f}  "
+            f"n={self.test_metrics['n']}"
+        )
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         return self.best_model.predict(X)
@@ -171,12 +189,12 @@ class QSARTrainer:
     def save(self, out_dir: Path) -> None:
         out_dir.mkdir(parents=True, exist_ok=True)
         joblib.dump(self.best_model, out_dir / "best_model.pkl")
-        joblib.dump(self.scaler,     out_dir / "scaler.pkl")
+        joblib.dump(self.scaler, out_dir / "scaler.pkl")
         metadata = {
-            "best_model":     self.best_name,
-            "feature_cols":   self.feature_cols,
-            "val_metrics":    self.val_metrics,
-            "test_metrics":   self.test_metrics,
+            "best_model": self.best_name,
+            "feature_cols": self.feature_cols,
+            "val_metrics": self.val_metrics,
+            "test_metrics": self.test_metrics,
         }
         with open(out_dir / "metadata.json", "w") as f:
             json.dump(metadata, f, indent=2)
@@ -185,12 +203,12 @@ class QSARTrainer:
     @classmethod
     def load(cls, out_dir: Path, model_cfg: dict | None = None) -> "QSARTrainer":
         trainer = cls(model_cfg or {})
-        trainer.best_model  = joblib.load(out_dir / "best_model.pkl")
-        trainer.scaler      = joblib.load(out_dir / "scaler.pkl")
+        trainer.best_model = joblib.load(out_dir / "best_model.pkl")
+        trainer.scaler = joblib.load(out_dir / "scaler.pkl")
         with open(out_dir / "metadata.json") as f:
             meta = json.load(f)
-        trainer.best_name    = meta["best_model"]
+        trainer.best_name = meta["best_model"]
         trainer.feature_cols = meta["feature_cols"]
-        trainer.val_metrics  = meta["val_metrics"]
+        trainer.val_metrics = meta["val_metrics"]
         trainer.test_metrics = meta["test_metrics"]
         return trainer

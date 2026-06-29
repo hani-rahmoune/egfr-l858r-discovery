@@ -56,8 +56,7 @@ def format_evidence(tool_results: list[Any]) -> list[str]:
 
         elif kind == "BatchPredictToolResult":
             lines.append(
-                f"batch_predict(n={r.n}) "
-                f"→ {r.n_valid} valid, {r.n_invalid} invalid"
+                f"batch_predict(n={r.n}) " f"→ {r.n_valid} valid, {r.n_invalid} invalid"
             )
 
         elif kind == "RankingLookupResult":

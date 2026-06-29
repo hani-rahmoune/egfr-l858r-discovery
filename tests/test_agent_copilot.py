@@ -26,30 +26,11 @@ from src.dashboard.copilot_page import (
     get_download_filename,
 )
 
-
 # ── Fixtures: fake result objects ──────────────────────────────────────────────
 
 
-class _FakePredict:
-    __class__ = type("PredictToolResult", (), {})()
+# Use simple namespaces whose type().__name__ matches the agent schema class.
 
-    def __init__(self, valid=True, pic50=7.5):
-        self.smiles = "COc1cc2ncnc(Nc3cccc(Br)c3)c2cc1OC"
-        self.valid = valid
-        self.pic50_mutant = pic50 if valid else None
-
-    @property
-    def __class__(self):
-        return type("PredictToolResult", (), {"__name__": "PredictToolResult"})
-
-    class _Meta:
-        __name__ = "PredictToolResult"
-
-    def _get_class(self):
-        return self
-
-
-# It's cleaner to use simple namespaces with the right __class__.__name__
 
 def _make(class_name: str, **kwargs):
     """Create a simple object whose type().__name__ == class_name."""
@@ -105,7 +86,9 @@ def _report(cid="gen_005", markdown="# Report\n\n## Limitations\nAll exploratory
 
 
 def _retrieval(source="CLAUDE.md", header="RL training", score=1.5):
-    return _make("RetrievalSection", source=source, header=header, content="...", score=score)
+    return _make(
+        "RetrievalSection", source=source, header=header, content="...", score=score
+    )
 
 
 # ── TestHelpers: format_evidence ───────────────────────────────────────────────
@@ -169,7 +152,9 @@ class TestFormatEvidence:
         assert "delta" not in lines[0]
 
     def test_comparison(self):
-        lines = format_evidence([_comparison(ids=["cmpd_015", "cmpd_024"], rec="cmpd_015")])
+        lines = format_evidence(
+            [_comparison(ids=["cmpd_015", "cmpd_024"], rec="cmpd_015")]
+        )
         assert "compare_candidates" in lines[0]
         assert "cmpd_015" in lines[0]
         assert "recommendation" in lines[0]
@@ -274,12 +259,10 @@ def test_example_prompts_count():
 
 @pytest.mark.unit
 def test_example_prompts_cover_five_flows():
-    labels = {label for label, _ in EXAMPLE_PROMPTS}
     prompts = [p for _, p in EXAMPLE_PROMPTS]
     # Single molecule: has a SMILES-like token
     assert any(
-        any(c.isupper() and c.isalpha() for c in p) and len(p) > 10
-        for p in prompts
+        any(c.isupper() and c.isalpha() for c in p) and len(p) > 10 for p in prompts
     )
     # Compare: should mention two candidates
     assert any("cmpd_" in p.lower() and "and" in p.lower() for p in prompts)
@@ -323,7 +306,16 @@ class TestCopilotPageRenders:
     def test_page_has_example_buttons(self, app):
         button_labels = [b.label for b in app.button]
         assert any(
-            any(label in bl for label in ("Single molecule", "Compare", "Report", "Copilot", "Predict"))
+            any(
+                label in bl
+                for label in (
+                    "Single molecule",
+                    "Compare",
+                    "Report",
+                    "Copilot",
+                    "Predict",
+                )
+            )
             for bl in button_labels
         ), f"No example prompt buttons found. Buttons: {button_labels}"
 

@@ -42,8 +42,8 @@ def _fmt_admet(predict: PredictToolResult | None) -> str:
     if predict is None or not predict.valid:
         return "_ADMET data unavailable._\n"
     lines = [
-        f"| Property | Value |",
-        f"|---|---|",
+        "| Property | Value |",
+        "|---|---|",
         f"| Status | {predict.admet_status or 'N/A'} |",
         f"| QED | {_fmt_float(predict.qed, 3)} |",
         f"| Covalent | {'Yes (' + ', '.join(predict.warheads) + ')' if predict.covalent else 'No'} |",
@@ -61,8 +61,8 @@ def _fmt_docking(docking: DockingLookupResult | None) -> str:
             "to generate docking scores._\n"
         )
     lines = [
-        f"| Metric | Value |",
-        f"|---|---|",
+        "| Metric | Value |",
+        "|---|---|",
         f"| L858R Vina score | {_fmt_float(docking.l858r_score)} kcal/mol |",
         f"| WT Vina score | {_fmt_float(docking.wt_score)} kcal/mol |",
         f"| Selectivity delta (structure-based, docking) | {_fmt_float(docking.selectivity_delta)} kcal/mol |",
@@ -83,8 +83,8 @@ def _fmt_ranking(ranking: RankingLookupResult | None) -> str:
     if ranking is None or not ranking.found:
         return "_This candidate is not in the final ranked shortlist._\n"
     lines = [
-        f"| Metric | Value |",
-        f"|---|---|",
+        "| Metric | Value |",
+        "|---|---|",
         f"| Rank | {ranking.rank} / 68 |",
         f"| Source | {ranking.source} |",
         f"| Final score | {_fmt_float(ranking.final_score)} |",
@@ -135,7 +135,9 @@ def generate_report(
     pic50 = _fmt_float(predict.pic50_mutant if predict and predict.valid else None)
     sel = _fmt_float(predict.selectivity_proxy if predict and predict.valid else None)
     domain = (predict.domain if predict and predict.valid else None) or "N/A"
-    rank_str = str(ranking.rank) + "/68" if (ranking and ranking.found) else "not ranked"
+    rank_str = (
+        str(ranking.rank) + "/68" if (ranking and ranking.found) else "not ranked"
+    )
     final = _fmt_float(ranking.final_score if ranking and ranking.found else None)
 
     summary_table = (

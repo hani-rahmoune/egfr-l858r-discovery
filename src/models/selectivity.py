@@ -40,7 +40,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
 
-from src.features.descriptors import compute_descriptor_matrix, DESCRIPTOR_NAMES
+from src.features.descriptors import DESCRIPTOR_NAMES, compute_descriptor_matrix
 from src.features.fingerprints import compute_fingerprint_matrix
 from src.utils.logging import get_logger
 
@@ -76,11 +76,11 @@ def compute_features_for_smiles(
     )
     desc_matrix, desc_valid = compute_descriptor_matrix(smiles_list)
 
-    valid_set    = sorted(set(fp_valid) & set(desc_valid))
-    fp_map   = {orig: i for i, orig in enumerate(fp_valid)}
+    valid_set = sorted(set(fp_valid) & set(desc_valid))
+    fp_map = {orig: i for i, orig in enumerate(fp_valid)}
     desc_map = {orig: i for i, orig in enumerate(desc_valid)}
 
-    fp_rows   = np.array([fp_matrix[fp_map[i]]   for i in valid_set])
+    fp_rows = np.array([fp_matrix[fp_map[i]] for i in valid_set])
     desc_rows = np.array([desc_matrix[desc_map[i]] for i in valid_set])
     X = np.concatenate([fp_rows, desc_rows], axis=1).astype(np.float32)
     return X, valid_set
@@ -122,15 +122,13 @@ def evaluate_selectivity(
         per_pair (list of per-molecule detail dicts),
         stability_note, verdict
     """
-    smiles_list  = sel_df["canonical_smiles"].tolist()
-    true_delta   = sel_df["selectivity_delta"].values.astype(float)
-    true_mutant  = sel_df["pic50_mutant"].values.astype(float)
-    true_wt      = sel_df["pic50_wt"].values.astype(float)
+    smiles_list = sel_df["canonical_smiles"].tolist()
+    true_delta = sel_df["selectivity_delta"].values.astype(float)
+    true_mutant = sel_df["pic50_mutant"].values.astype(float)
+    true_wt = sel_df["pic50_wt"].values.astype(float)
     n = len(true_delta)
 
-    logger.info(
-        f"{EXPLORATORY_LABEL} computing features for {n} paired molecules ..."
-    )
+    logger.info(f"{EXPLORATORY_LABEL} computing features for {n} paired molecules ...")
     X, valid_idx = compute_features_for_smiles(smiles_list)
 
     if len(valid_idx) < n:
@@ -141,11 +139,11 @@ def evaluate_selectivity(
         )
 
     # Restrict to molecules that succeeded feature computation
-    X_valid      = X
+    X_valid = X
     true_delta_v = true_delta[valid_idx]
     true_mutant_v = true_mutant[valid_idx]
-    true_wt_v    = true_wt[valid_idx]
-    smiles_valid  = [smiles_list[i] for i in valid_idx]
+    true_wt_v = true_wt[valid_idx]
+    smiles_valid = [smiles_list[i] for i in valid_idx]
     n_v = len(valid_idx)
 
     logger.info(f"{EXPLORATORY_LABEL} predicting with backbone (Model 1) ...")
@@ -154,62 +152,63 @@ def evaluate_selectivity(
     logger.info(f"{EXPLORATORY_LABEL} predicting with WT-proxy (Model 2) ...")
     pred_wt = predict_with_trainer(wt_proxy_trainer, X_valid)
 
-    derived_delta  = pred_l858r - pred_wt
-    constant_pred  = np.full(n_v, np.mean(true_delta_v))  # same for all
-    loomean_preds  = np.array([
-        np.mean(np.delete(true_delta_v, i)) for i in range(n_v)
-    ])
+    derived_delta = pred_l858r - pred_wt
+    constant_pred = np.full(n_v, np.mean(true_delta_v))  # same for all
+    loomean_preds = np.array([np.mean(np.delete(true_delta_v, i)) for i in range(n_v)])
 
     # Spearman r (suppress nan_policy issues via try/except)
     def _spearman(a, b):
         res = spearmanr(a, b)
         return float(res.statistic), float(res.pvalue)
 
-    r_derived,  p_derived  = _spearman(true_delta_v, derived_delta)
-    r_loomean,  p_loomean  = _spearman(true_delta_v, loomean_preds)
+    r_derived, p_derived = _spearman(true_delta_v, derived_delta)
+    r_loomean, p_loomean = _spearman(true_delta_v, loomean_preds)
     r_constant, p_constant = _spearman(true_delta_v, constant_pred)
 
     per_pair = []
-    orig_idxs = list(sel_df.index) if hasattr(sel_df, 'index') else list(range(n))
     for k, vi in enumerate(valid_idx):
-        per_pair.append({
-            "orig_idx":     vi,
-            "smiles":       smiles_valid[k],
-            "true_mutant":  float(true_mutant_v[k]),
-            "true_wt":      float(true_wt_v[k]),
-            "true_delta":   float(true_delta_v[k]),
-            "pred_l858r":   float(pred_l858r[k]),
-            "pred_wt":      float(pred_wt[k]),
-            "derived_delta": float(derived_delta[k]),
-            "loomean_pred": float(loomean_preds[k]),
-            "err_backbone": float(pred_l858r[k] - true_mutant_v[k]),
-            "err_wt_proxy": float(pred_wt[k] - true_wt_v[k]),
-        })
+        per_pair.append(
+            {
+                "orig_idx": vi,
+                "smiles": smiles_valid[k],
+                "true_mutant": float(true_mutant_v[k]),
+                "true_wt": float(true_wt_v[k]),
+                "true_delta": float(true_delta_v[k]),
+                "pred_l858r": float(pred_l858r[k]),
+                "pred_wt": float(pred_wt[k]),
+                "derived_delta": float(derived_delta[k]),
+                "loomean_pred": float(loomean_preds[k]),
+                "err_backbone": float(pred_l858r[k] - true_mutant_v[k]),
+                "err_wt_proxy": float(pred_wt[k] - true_wt_v[k]),
+            }
+        )
 
     stability_note = spearman_stability_note(n_v)
-    verdict        = _build_verdict(r_derived, r_loomean, r_constant, n_v)
+    verdict = _build_verdict(r_derived, r_loomean, r_constant, n_v)
 
     return {
-        "n_pairs":           n_v,
-        "true_delta":        true_delta_v,
-        "pred_l858r":        pred_l858r,
-        "pred_wt":           pred_wt,
-        "derived_delta":     derived_delta,
-        "loomean_preds":     loomean_preds,
-        "constant_pred":     constant_pred,
-        "spearman_derived":  r_derived,
-        "pvalue_derived":    p_derived,
-        "spearman_loomean":  r_loomean,
-        "pvalue_loomean":    p_loomean,
+        "n_pairs": n_v,
+        "true_delta": true_delta_v,
+        "pred_l858r": pred_l858r,
+        "pred_wt": pred_wt,
+        "derived_delta": derived_delta,
+        "loomean_preds": loomean_preds,
+        "constant_pred": constant_pred,
+        "spearman_derived": r_derived,
+        "pvalue_derived": p_derived,
+        "spearman_loomean": r_loomean,
+        "pvalue_loomean": p_loomean,
         "spearman_constant": r_constant,
-        "pvalue_constant":   p_constant,
-        "per_pair":          per_pair,
-        "stability_note":    stability_note,
-        "verdict":           verdict,
+        "pvalue_constant": p_constant,
+        "per_pair": per_pair,
+        "stability_note": stability_note,
+        "verdict": verdict,
     }
 
 
-def _build_verdict(r_derived: float, r_loomean: float, r_constant: float, n: int) -> str:
+def _build_verdict(
+    r_derived: float, r_loomean: float, r_constant: float, n: int
+) -> str:
     """
     Plain-English verdict on whether derived selectivity is informative.
     Returns a string beginning with EXPLORATORY_LABEL.
@@ -219,6 +218,7 @@ def _build_verdict(r_derived: float, r_loomean: float, r_constant: float, n: int
     # Using the t-distribution approximation: t = r*sqrt((n-2)/(1-r^2)), df=n-2
     # We hard-code conservative thresholds.
     from scipy.stats import t as t_dist
+
     df = max(n - 2, 1)
     t_crit = float(t_dist.ppf(0.975, df=df))  # two-sided 5%
 
@@ -242,7 +242,9 @@ def _build_verdict(r_derived: float, r_loomean: float, r_constant: float, n: int
         if r_derived <= r_constant:
             reason.append(f"does not beat constant baseline (r={r_constant:.3f})")
         if not is_significant:
-            reason.append(f"not statistically significant at n={n} (r={r_derived:.3f} < threshold)")
+            reason.append(
+                f"not statistically significant at n={n} (r={r_derived:.3f} < threshold)"
+            )
         verdict = (
             f"Derived selectivity {'; '.join(reason)}.  "
             f"Selectivity cannot be modeled at n={n}; "

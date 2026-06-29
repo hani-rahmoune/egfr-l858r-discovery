@@ -6,45 +6,48 @@ import pandas as pd
 import pytest
 
 # ---------------------------------------------------------------------------
-# CI artifact guard
+# CI artifact guard (per-artifact)
 # ---------------------------------------------------------------------------
-# Many TestDataLoaders tests are marked @unit but assert that real files
-# exist (models/qsar/*.json, data/generated/*.csv).  Those files are
-# gitignored and absent in CI.  We auto-skip them when the sentinel artifact
-# is missing so the CI job doesn't fail — they still run locally after the
-# pipeline has been executed.
-_SENTINEL = (
-    Path(__file__).resolve().parent.parent
-    / "models"
-    / "qsar"
-    / "general"
-    / "metadata.json"
-)
-_ARTIFACTS_PRESENT = _SENTINEL.exists()
+# Some tests are marked @unit but assert that a real pipeline artifact exists.
+# Two kinds of artifact differ in whether they reach CI:
+#   * gitignored outputs (data/generated/*.csv, *.pkl) are ABSENT in CI
+#   * tracked JSON results (models/**/*.json) are PRESENT in CI
+# A single tracked sentinel cannot tell the two apart, so each test below is
+# mapped to the specific file it reads.  A test is skipped only when ITS file
+# is missing.  In CI the CSV-backed tests skip (csv gitignored) while the
+# JSON-backed tests still run (json tracked); locally every file is present so
+# nothing is skipped.
+_ROOT = Path(__file__).resolve().parent.parent
 
-_NEEDS_ARTIFACTS: frozenset[str] = frozenset(
-    {
-        "test_final_ranking_loads",
-        "test_final_ranking_has_both_sources",
-        "test_qsar_metrics",
-        "test_fingerprint_ablation",
-        "test_model3_verdict",
-        "test_model4_verdict",
-        "test_docking_noise",
-        "test_sanity_check",
-        "test_generated_docking",
-        "test_rl_results",
-    }
-)
+# test name -> the artifact file it depends on (relative to repo root)
+_TEST_ARTIFACTS: dict[str, str] = {
+    # gitignored CSV: absent in CI, present locally after rank_candidates.py
+    "test_final_ranking_loads": "data/generated/final_ranked_candidates.csv",
+    "test_final_ranking_has_both_sources": "data/generated/final_ranked_candidates.csv",
+    "test_lookup_ranking_known": "data/generated/final_ranked_candidates.csv",
+    "test_lookup_ranking_generated": "data/generated/final_ranked_candidates.csv",
+    "test_lookup_ranking_returns_smiles": "data/generated/final_ranked_candidates.csv",
+    # tracked JSON: present in CI, kept under the guard for local robustness
+    "test_qsar_metrics": "models/qsar/general/metadata.json",
+    "test_fingerprint_ablation": "models/qsar/fingerprint_ablation_results.json",
+    "test_model3_verdict": "models/qsar/l858r/loocv_results.json",
+    "test_model4_verdict": "models/qsar/selectivity/selectivity_results.json",
+    "test_docking_noise": "models/qsar/docking_noise_results.json",
+    "test_sanity_check": "models/qsar/sanity_check_docking.json",
+    "test_generated_docking": "models/generator/generated_docking_results.json",
+    "test_rl_results": "models/generator/rl_results.json",
+}
 
 
 def pytest_collection_modifyitems(config, items):
-    if _ARTIFACTS_PRESENT:
-        return
-    skip = pytest.mark.skip(reason="model artifacts absent — run the pipeline first")
     for item in items:
-        if item.name in _NEEDS_ARTIFACTS:
-            item.add_marker(skip)
+        rel = _TEST_ARTIFACTS.get(item.name)
+        if rel is not None and not (_ROOT / rel).exists():
+            item.add_marker(
+                pytest.mark.skip(
+                    reason=f"artifact absent ({rel}), run the pipeline first"
+                )
+            )
 
 
 VALID_SMILES = [

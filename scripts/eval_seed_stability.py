@@ -18,7 +18,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.models.mlflow_utils import log_seed_summary, start_run
+from src.models.mlflow_utils import log_seed_summary
 from src.models.qsar import QSARTrainer
 from src.splitting.scaffold_split import scaffold_split
 from src.utils.config import get_project_root, load_model_config
@@ -139,8 +139,14 @@ def evaluate_model(name: str, parquet_name: str, cfg: dict) -> list[dict]:
         log_seed_summary(
             task=task,
             model=best_model_name,
-            per_seed=[{k: v for k, v in m.items() if k != "best_model"} for m in per_seed],
-            params={"seeds": str(SEEDS), "n_seeds": len(SEEDS), "fp_type": "morgan_ecfp4_desc"},
+            per_seed=[
+                {k: v for k, v in m.items() if k != "best_model"} for m in per_seed
+            ],
+            params={
+                "seeds": str(SEEDS),
+                "n_seeds": len(SEEDS),
+                "fp_type": "morgan_ecfp4_desc",
+            },
         )
     except Exception as exc:
         logger.warning(f"MLflow logging failed (non-fatal): {exc}")

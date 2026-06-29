@@ -12,7 +12,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from src.agent.guardrails import add_scientific_warnings, find_forbidden_claims
+from src.agent.guardrails import find_forbidden_claims
 from src.agent.prompts import SYSTEM_PROMPT, llm_summarize
 from src.agent.retrieval import retrieve
 from src.agent.schemas import AgentRequest, AgentResponse
@@ -31,12 +31,36 @@ from src.agent.tools import (
 _INTENT_RULES: list[tuple[str, list[str]]] = [
     ("report", ["report", "summarize", "summary", "full report", "generate report"]),
     ("comparison", ["compare", " vs ", " versus ", "better than", "prefer", "between"]),
-    ("docking_query", ["dock", "vina", "binding", "pocket", "delta kcal", "kcal/mol", "b2", "b3"]),
+    (
+        "docking_query",
+        ["dock", "vina", "binding", "pocket", "delta kcal", "kcal/mol", "b2", "b3"],
+    ),
     ("batch_predict", ["batch", "multiple smiles", "list of smiles", "screen list"]),
-    ("candidate_lookup", ["cmpd_", "gen_", "rank", "ranking", "shortlist", "final rank"]),
+    (
+        "candidate_lookup",
+        ["cmpd_", "gen_", "rank", "ranking", "shortlist", "final rank"],
+    ),
     ("single_predict", ["smiles", "predict", "score", "pic50", "pIC50", "activity of"]),
-    ("project_qa", ["what", "how", "why", "explain", "limitation", "method", "pipeline",
-                    "phase", "model", "admet", "loocv", "rl", "gnn", "scaffold", "tanimoto"]),
+    (
+        "project_qa",
+        [
+            "what",
+            "how",
+            "why",
+            "explain",
+            "limitation",
+            "method",
+            "pipeline",
+            "phase",
+            "model",
+            "admet",
+            "loocv",
+            "rl",
+            "gnn",
+            "scaffold",
+            "tanimoto",
+        ],
+    ),
 ]
 
 # Regex for candidate IDs embedded in a query
@@ -76,15 +100,33 @@ def _extract_smiles(query: str) -> list[str]:
 
 def _format_predict_answer(result: Any) -> str:
     if not result.valid:
-        return f"**Invalid SMILES**: {result.error or 'RDKit could not parse the input.'}"
+        return (
+            f"**Invalid SMILES**: {result.error or 'RDKit could not parse the input.'}"
+        )
     lines = [
         "**Prediction (EXPLORATORY)**",
-        f"- Backbone pred pIC50: {result.pic50_mutant:.3f}" if result.pic50_mutant else "- Backbone pred pIC50: N/A",
-        f"- WT-proxy pred pIC50: {result.pic50_wt:.3f}" if result.pic50_wt else "- WT-proxy pred pIC50: N/A",
-        f"- Selectivity proxy (ML proxy, exploratory): {result.selectivity_proxy:.3f}" if result.selectivity_proxy else "- Selectivity proxy (ML proxy, exploratory): N/A",
+        (
+            f"- Backbone pred pIC50: {result.pic50_mutant:.3f}"
+            if result.pic50_mutant
+            else "- Backbone pred pIC50: N/A"
+        ),
+        (
+            f"- WT-proxy pred pIC50: {result.pic50_wt:.3f}"
+            if result.pic50_wt
+            else "- WT-proxy pred pIC50: N/A"
+        ),
+        (
+            f"- Selectivity proxy (ML proxy, exploratory): {result.selectivity_proxy:.3f}"
+            if result.selectivity_proxy
+            else "- Selectivity proxy (ML proxy, exploratory): N/A"
+        ),
         f"- Applicability domain: {result.domain or 'N/A'} (cf={result.confidence_factor})",
         f"- Covalent: {'Yes (' + ', '.join(result.warheads) + ')' if result.covalent else 'No'}",
-        f"- ADMET: {result.admet_status or 'N/A'}, QED={result.qed:.3f}" if result.qed else f"- ADMET: {result.admet_status or 'N/A'}",
+        (
+            f"- ADMET: {result.admet_status or 'N/A'}, QED={result.qed:.3f}"
+            if result.qed
+            else f"- ADMET: {result.admet_status or 'N/A'}"
+        ),
     ]
     if result.warnings:
         lines.append("\n**Warnings**:")
@@ -94,7 +136,9 @@ def _format_predict_answer(result: Any) -> str:
 
 def _format_ranking_answer(r: Any) -> str:
     if not r.found:
-        return f"Candidate `{r.candidate_id}` was not found in the final ranked shortlist."
+        return (
+            f"Candidate `{r.candidate_id}` was not found in the final ranked shortlist."
+        )
     return (
         f"**{r.candidate_id}** | Rank {r.rank}/68 | Source: {r.source} | "
         f"Final score: {r.final_score:.3f} | "
@@ -113,9 +157,17 @@ def _format_docking_answer(d: Any) -> str:
         return f"{d.message or 'No docking data found for this candidate.'}"
     parts = [
         f"**Docking results for {d.candidate_id}** (EXPLORATORY, rigid Vina)",
-        f"- L858R score: {d.l858r_score:.3f} kcal/mol" if d.l858r_score else "- L858R score: N/A",
+        (
+            f"- L858R score: {d.l858r_score:.3f} kcal/mol"
+            if d.l858r_score
+            else "- L858R score: N/A"
+        ),
         f"- WT score: {d.wt_score:.3f} kcal/mol" if d.wt_score else "- WT score: N/A",
-        f"- Selectivity delta: {d.selectivity_delta:.3f} kcal/mol ({d.direction or 'unknown'})" if d.selectivity_delta else "- Selectivity delta: N/A",
+        (
+            f"- Selectivity delta: {d.selectivity_delta:.3f} kcal/mol ({d.direction or 'unknown'})"
+            if d.selectivity_delta
+            else "- Selectivity delta: N/A"
+        ),
     ]
     if d.mean_delta is not None:
         parts += [
@@ -124,7 +176,9 @@ def _format_docking_answer(d: Any) -> str:
         ]
     if d.warheads:
         parts.append(f"- Warheads: {', '.join(d.warheads)} (docking confidence: lower)")
-    parts.append("\n_Delta direction is reliable; magnitude underestimates the true affinity difference._")
+    parts.append(
+        "\n_Delta direction is reliable; magnitude underestimates the true affinity difference._"
+    )
     return "\n".join(parts)
 
 
@@ -147,7 +201,9 @@ def handle(request: AgentRequest, registry: Any = None) -> AgentResponse:
     # ── Dispatch ───────────────────────────────────────────────────────────────
 
     if intent == "single_predict":
-        smiles_candidates = request.smiles and [request.smiles] or _extract_smiles(query)
+        smiles_candidates = (
+            request.smiles and [request.smiles] or _extract_smiles(query)
+        )
         if not smiles_candidates:
             answer_parts.append(
                 "Please provide a SMILES string to predict. "
@@ -162,8 +218,7 @@ def handle(request: AgentRequest, registry: Any = None) -> AgentResponse:
 
     elif intent == "batch_predict":
         smiles_list = (
-            request.smiles.split() if request.smiles
-            else _extract_smiles(query)
+            request.smiles.split() if request.smiles else _extract_smiles(query)
         )
         if not smiles_list:
             answer_parts.append("Please provide SMILES strings for batch prediction.")
@@ -175,7 +230,9 @@ def handle(request: AgentRequest, registry: Any = None) -> AgentResponse:
                 f"{batch.n_valid} valid, {batch.n_invalid} invalid (EXPLORATORY)."
             )
             for r in batch.results:
-                answer_parts.append(f"\n**{r.smiles[:40]}{'...' if len(r.smiles) > 40 else ''}**")
+                answer_parts.append(
+                    f"\n**{r.smiles[:40]}{'...' if len(r.smiles) > 40 else ''}**"
+                )
                 answer_parts.append(_format_predict_answer(r))
                 all_warnings.extend(r.warnings)
 
@@ -221,8 +278,7 @@ def handle(request: AgentRequest, registry: Any = None) -> AgentResponse:
             result = compare_candidates(cids[:5], registry)
             tool_results.append(result)
             answer_parts.append(
-                f"**Recommendation**: {result.recommendation}\n\n"
-                f"{result.reason}"
+                f"**Recommendation**: {result.recommendation}\n\n" f"{result.reason}"
             )
             if result.warnings:
                 all_warnings.extend(result.warnings)
@@ -252,8 +308,7 @@ def handle(request: AgentRequest, registry: Any = None) -> AgentResponse:
         sources = [f"{s.source} § {s.header}" for s in sections]
         if sections:
             context = "\n\n---\n\n".join(
-                f"**{s.source} — {s.header}**\n{s.content[:600]}"
-                for s in sections
+                f"**{s.source} — {s.header}**\n{s.content[:600]}" for s in sections
             )
             answer_parts.append(
                 "_Relevant documentation sections (keyword retrieval):_\n\n" + context
@@ -272,7 +327,9 @@ def handle(request: AgentRequest, registry: Any = None) -> AgentResponse:
             "I could not classify your intent. Here are the closest documentation sections:"
         )
         for s in sections:
-            answer_parts.append(f"\n**{s.source} — {s.header}** (score={s.score:.2f})\n{s.content[:300]}")
+            answer_parts.append(
+                f"\n**{s.source} — {s.header}** (score={s.score:.2f})\n{s.content[:300]}"
+            )
 
     # ── Assemble answer ────────────────────────────────────────────────────────
 
@@ -282,7 +339,7 @@ def handle(request: AgentRequest, registry: Any = None) -> AgentResponse:
     _, bad_claims = _sanitize_answer(raw_answer)
     if bad_claims:
         all_warnings.append(
-            f"[GUARDRAIL] Potential unsupported claims detected in answer: "
+            "[GUARDRAIL] Potential unsupported claims detected in answer: "
             + ", ".join(f'"{c}"' for c in bad_claims)
             + ". Review before sharing."
         )

@@ -4,7 +4,10 @@
 -r base.txt
 pytest>=7.4.0
 pytest-cov>=4.1.0
-ruff>=0.1.0
-black>=23.0.0
+# Linters pinned to exact versions so CI matches local runs. Unpinned ranges
+# let the runner install newer ruff/black that flag or reformat code which
+# passed locally, turning CI red without any code change.
+ruff==0.15.20
+black==24.10.0
 xgboost==3.2.0
 lightgbm>=4.1.0

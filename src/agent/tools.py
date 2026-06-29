@@ -26,9 +26,13 @@ from src.agent.schemas import (
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 _RANKING_CSV = PROJECT_ROOT / "data" / "generated" / "final_ranked_candidates.csv"
-_LIBRARY_DOCKING_JSON = PROJECT_ROOT / "models" / "qsar" / "library_docking_results.json"
+_LIBRARY_DOCKING_JSON = (
+    PROJECT_ROOT / "models" / "qsar" / "library_docking_results.json"
+)
 _NOISE_DOCKING_JSON = PROJECT_ROOT / "models" / "qsar" / "docking_noise_results.json"
-_GEN_DOCKING_JSON = PROJECT_ROOT / "models" / "generator" / "generated_docking_results.json"
+_GEN_DOCKING_JSON = (
+    PROJECT_ROOT / "models" / "generator" / "generated_docking_results.json"
+)
 
 MAX_BATCH = 512
 
@@ -43,6 +47,7 @@ def _get_registry(registry: Any = None) -> Any:
         return registry
     if _registry_cache is None:
         from src.api.services import ModelRegistry
+
         _registry_cache = ModelRegistry.load()
     return _registry_cache
 
@@ -177,6 +182,7 @@ def _get_ranking_index() -> dict[str, dict[str, Any]]:
             _ranking_cache = {}
             return _ranking_cache
         import pandas as pd
+
         df = pd.read_csv(_RANKING_CSV)
         # Normalise: NaN -> None for downstream code
         _ranking_cache = {
@@ -300,9 +306,7 @@ def lookup_docking_results(candidate_id: str) -> DockingLookupResult:
     return result
 
 
-def compare_candidates(
-    ids: list[str], registry: Any = None
-) -> ComparisonResult:
+def compare_candidates(ids: list[str], registry: Any = None) -> ComparisonResult:
     """
     Compare two or more candidates and recommend the more conservative choice.
 
@@ -349,7 +353,9 @@ def compare_candidates(
     reason_parts: list[str] = []
 
     if b_rank.found:
-        reason_parts.append(f"rank {b_rank.rank}/68, final_score={b_rank.final_score:.3f}")
+        reason_parts.append(
+            f"rank {b_rank.rank}/68, final_score={b_rank.final_score:.3f}"
+        )
     if not (b_rank.found and b_rank.is_covalent):
         reason_parts.append("non-covalent")
     if b_rank.found and b_rank.confidence_factor == 1.0:
@@ -357,7 +363,9 @@ def compare_candidates(
     if b_rank.found and b_rank.admet_norm is not None and b_rank.admet_norm > 0.5:
         reason_parts.append(f"ADMET norm={b_rank.admet_norm:.2f}")
     if b_dock.found and b_dock.noise_call == "L858R_selective":
-        reason_parts.append(f"noise-study call: L858R_selective (mean delta={b_dock.mean_delta:.3f})")
+        reason_parts.append(
+            f"noise-study call: L858R_selective (mean delta={b_dock.mean_delta:.3f})"
+        )
 
     reason = (
         f"Preferring {best} over {runner_up}: "
@@ -365,9 +373,7 @@ def compare_candidates(
         + ". All scores are exploratory."
     )
 
-    scores = {
-        cid: conservative_score(cid) for cid in ids
-    }
+    scores = {cid: conservative_score(cid) for cid in ids}
 
     all_warnings: list[str] = []
     for cid in ids:

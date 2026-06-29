@@ -126,9 +126,9 @@ def test_retrieve_l858r_calibration_section():
     """Must return a section discussing the L858R LOOCV calibration result."""
     results = retrieve("L858R calibration LOOCV backbone", top_k=10)
     combined = " ".join(r.header + " " + r.content for r in results).lower()
-    assert "l858r" in combined and ("calibration" in combined or "loocv" in combined), (
-        "No L858R calibration section found in top-10 results"
-    )
+    assert "l858r" in combined and (
+        "calibration" in combined or "loocv" in combined
+    ), "No L858R calibration section found in top-10 results"
 
 
 @pytest.mark.unit
@@ -137,8 +137,11 @@ def test_retrieve_rl_failure_section():
     results = retrieve("RL REINVENT reward hacking mode collapse", top_k=10)
     combined = " ".join(r.header + " " + r.content for r in results).lower()
     assert (
-        "reward" in combined or "hacking" in combined or "collapse" in combined
-        or "reinvent" in combined or "rl" in combined
+        "reward" in combined
+        or "hacking" in combined
+        or "collapse" in combined
+        or "reinvent" in combined
+        or "rl" in combined
     ), "No RL failure section found in top-10 results"
 
 

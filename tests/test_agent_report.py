@@ -24,7 +24,6 @@ from src.agent.schemas import (
     RankingLookupResult,
 )
 
-
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
 
@@ -85,49 +84,65 @@ def _make_docking(cid: str = "cmpd_015") -> DockingLookupResult:
 
 @pytest.mark.unit
 def test_report_returns_candidate_report():
-    report = generate_report("cmpd_015", _make_ranking(), _make_docking(), _make_predict())
+    report = generate_report(
+        "cmpd_015", _make_ranking(), _make_docking(), _make_predict()
+    )
     assert isinstance(report, CandidateReport)
 
 
 @pytest.mark.unit
 def test_report_contains_candidate_id():
-    report = generate_report("cmpd_015", _make_ranking(), _make_docking(), _make_predict())
+    report = generate_report(
+        "cmpd_015", _make_ranking(), _make_docking(), _make_predict()
+    )
     assert "cmpd_015" in report.markdown
 
 
 @pytest.mark.unit
 def test_report_has_limitations_section():
-    report = generate_report("cmpd_015", _make_ranking(), _make_docking(), _make_predict())
+    report = generate_report(
+        "cmpd_015", _make_ranking(), _make_docking(), _make_predict()
+    )
     assert "## Limitations" in report.markdown
 
 
 @pytest.mark.unit
 def test_report_has_exploratory_banner():
-    report = generate_report("cmpd_015", _make_ranking(), _make_docking(), _make_predict())
+    report = generate_report(
+        "cmpd_015", _make_ranking(), _make_docking(), _make_predict()
+    )
     assert "EXPLORATORY" in report.markdown
 
 
 @pytest.mark.unit
 def test_report_has_summary_section():
-    report = generate_report("cmpd_015", _make_ranking(), _make_docking(), _make_predict())
+    report = generate_report(
+        "cmpd_015", _make_ranking(), _make_docking(), _make_predict()
+    )
     assert "## Summary" in report.markdown
 
 
 @pytest.mark.unit
 def test_report_has_docking_section():
-    report = generate_report("cmpd_015", _make_ranking(), _make_docking(), _make_predict())
+    report = generate_report(
+        "cmpd_015", _make_ranking(), _make_docking(), _make_predict()
+    )
     assert "## Docking" in report.markdown
 
 
 @pytest.mark.unit
 def test_report_has_admet_section():
-    report = generate_report("cmpd_015", _make_ranking(), _make_docking(), _make_predict())
+    report = generate_report(
+        "cmpd_015", _make_ranking(), _make_docking(), _make_predict()
+    )
     assert "## ADMET" in report.markdown
 
 
 @pytest.mark.unit
 def test_report_has_ranking_section():
-    report = generate_report("cmpd_015", _make_ranking(), _make_docking(), _make_predict())
+    report = generate_report(
+        "cmpd_015", _make_ranking(), _make_docking(), _make_predict()
+    )
     assert "## Composite Ranking" in report.markdown
 
 
@@ -136,15 +151,20 @@ def test_report_has_ranking_section():
 
 @pytest.mark.unit
 def test_report_no_forbidden_claims_full():
-    report = generate_report("cmpd_015", _make_ranking(), _make_docking(), _make_predict())
+    report = generate_report(
+        "cmpd_015", _make_ranking(), _make_docking(), _make_predict()
+    )
     claims = find_forbidden_claims(report.markdown)
-    assert claims == [], f"Forbidden claims in report: {claims}\n\n{report.markdown[:800]}"
+    assert (
+        claims == []
+    ), f"Forbidden claims in report: {claims}\n\n{report.markdown[:800]}"
 
 
 @pytest.mark.unit
 def test_limitations_no_forbidden_claims():
     """The limitations block must itself be claim-free."""
     from src.agent.report import _LIMITATIONS_BLOCK
+
     claims = find_forbidden_claims(_LIMITATIONS_BLOCK)
     assert claims == [], f"Forbidden claims in limitations block: {claims}"
 
@@ -166,7 +186,11 @@ def test_report_none_docking():
     report = generate_report("cmpd_015", _make_ranking(), None, _make_predict())
     assert "## Limitations" in report.markdown
     # Should mention no docking data
-    assert "No docking data" in report.markdown or "unavailable" in report.markdown or "not found" in report.markdown
+    assert (
+        "No docking data" in report.markdown
+        or "unavailable" in report.markdown
+        or "not found" in report.markdown
+    )
 
 
 @pytest.mark.unit
@@ -198,19 +222,25 @@ def test_report_invalid_predict():
 
 @pytest.mark.unit
 def test_report_includes_pic50():
-    report = generate_report("cmpd_015", _make_ranking(), _make_docking(), _make_predict())
+    report = generate_report(
+        "cmpd_015", _make_ranking(), _make_docking(), _make_predict()
+    )
     assert "8.816" in report.markdown
 
 
 @pytest.mark.unit
 def test_report_includes_rank():
-    report = generate_report("cmpd_015", _make_ranking(), _make_docking(), _make_predict())
+    report = generate_report(
+        "cmpd_015", _make_ranking(), _make_docking(), _make_predict()
+    )
     assert "1/68" in report.markdown
 
 
 @pytest.mark.unit
 def test_report_includes_docking_delta():
-    report = generate_report("cmpd_015", _make_ranking(), _make_docking(), _make_predict())
+    report = generate_report(
+        "cmpd_015", _make_ranking(), _make_docking(), _make_predict()
+    )
     assert "-0.634" in report.markdown or "-0.452" in report.markdown
 
 

@@ -48,16 +48,23 @@ class _MockRegistry:
 
     def score(self, smiles: str) -> dict:
         from rdkit import Chem
+
         from src.features.covalent import detect_warheads
         from src.scoring.ranking import build_warnings
 
         mol = Chem.MolFromSmiles(smiles) if smiles else None
         if mol is None:
             return {
-                "smiles": smiles, "canonical_smiles": None, "valid": False,
-                "pic50_mutant": None, "pic50_wt": None, "selectivity_proxy": None,
-                "covalent": False, "warheads": [],
-                "admet": None, "applicability_domain": None,
+                "smiles": smiles,
+                "canonical_smiles": None,
+                "valid": False,
+                "pic50_mutant": None,
+                "pic50_wt": None,
+                "selectivity_proxy": None,
+                "covalent": False,
+                "warheads": [],
+                "admet": None,
+                "applicability_domain": None,
                 "docking_selectivity_available": False,
                 "warnings": ["Invalid SMILES: RDKit could not parse the input."],
             }
@@ -67,14 +74,29 @@ class _MockRegistry:
         domain = "in_domain"
         warnings = build_warnings(domain, is_cov, warheads, None)
         return {
-            "smiles": smiles, "canonical_smiles": canonical, "valid": True,
-            "pic50_mutant": 7.5, "pic50_wt": 7.0, "selectivity_proxy": 0.5,
-            "covalent": is_cov, "warheads": warheads,
-            "admet": {"status": "pass", "qed": 0.65, "sa_score": 2.5,
-                      "lipinski_pass": True, "veber_pass": True,
-                      "pains_alerts": [], "brenk_alerts": [], "flag_reasons": []},
-            "applicability_domain": {"domain": domain, "max_tanimoto": 0.75,
-                                     "confidence_factor": 1.0},
+            "smiles": smiles,
+            "canonical_smiles": canonical,
+            "valid": True,
+            "pic50_mutant": 7.5,
+            "pic50_wt": 7.0,
+            "selectivity_proxy": 0.5,
+            "covalent": is_cov,
+            "warheads": warheads,
+            "admet": {
+                "status": "pass",
+                "qed": 0.65,
+                "sa_score": 2.5,
+                "lipinski_pass": True,
+                "veber_pass": True,
+                "pains_alerts": [],
+                "brenk_alerts": [],
+                "flag_reasons": [],
+            },
+            "applicability_domain": {
+                "domain": domain,
+                "max_tanimoto": 0.75,
+                "confidence_factor": 1.0,
+            },
             "docking_selectivity_available": False,
             "warnings": warnings,
         }
@@ -86,6 +108,7 @@ def reg():
 
 
 # ── predict_smiles ─────────────────────────────────────────────────────────────
+
 
 @pytest.mark.unit
 def test_predict_valid_smiles(reg):
@@ -131,11 +154,14 @@ def test_predict_covalent_smiles(reg):
 def test_predict_warnings_populated(reg):
     """Valid molecule should carry at least the selectivity-proxy caveat."""
     result = predict_smiles(GEFITINIB, registry=reg)
-    assert any("selectivity_proxy" in w or "exploratory" in w.lower() or "EXPLORATORY" in w
-               for w in result.warnings), result.warnings
+    assert any(
+        "selectivity_proxy" in w or "exploratory" in w.lower() or "EXPLORATORY" in w
+        for w in result.warnings
+    ), result.warnings
 
 
 # ── batch_predict ──────────────────────────────────────────────────────────────
+
 
 @pytest.mark.unit
 def test_batch_predict_mixed(reg):
@@ -151,6 +177,7 @@ def test_batch_predict_mixed(reg):
 @pytest.mark.unit
 def test_batch_predict_cap(reg):
     from src.agent.tools import MAX_BATCH
+
     with pytest.raises(ValueError, match="exceeds limit"):
         batch_predict(["CC"] * (MAX_BATCH + 1), registry=reg)
 
@@ -164,6 +191,7 @@ def test_batch_predict_all_valid(reg):
 
 
 # ── lookup_final_ranking ──────────────────────────────────────────────────────
+
 
 @pytest.mark.unit
 def test_lookup_ranking_known():
@@ -200,6 +228,7 @@ def test_lookup_ranking_returns_smiles():
 
 
 # ── lookup_docking_results ────────────────────────────────────────────────────
+
 
 @pytest.mark.unit
 def test_lookup_docking_known():
@@ -258,6 +287,7 @@ def test_docking_direction_consistent():
 
 # ── compare_candidates ────────────────────────────────────────────────────────
 
+
 @pytest.mark.unit
 def test_compare_two_known(reg):
     result = compare_candidates(["cmpd_015", "cmpd_024"], registry=reg)
@@ -290,9 +320,11 @@ def test_compare_three_candidates(reg):
 
 # ── generate_candidate_report ─────────────────────────────────────────────────
 
+
 @pytest.mark.unit
 def test_report_known_candidate(reg):
     from src.agent.schemas import CandidateReport
+
     result = generate_candidate_report(KNOWN_CID, registry=reg)
     assert isinstance(result, CandidateReport)
     assert KNOWN_CID in result.markdown
@@ -311,6 +343,9 @@ def test_report_missing_candidate(reg):
 @pytest.mark.unit
 def test_report_no_forbidden_claims(reg):
     from src.agent.guardrails import find_forbidden_claims
+
     result = generate_candidate_report(KNOWN_CID, registry=reg)
     claims = find_forbidden_claims(result.markdown)
-    assert claims == [], f"Forbidden claims found: {claims}\n---\n{result.markdown[:500]}"
+    assert (
+        claims == []
+    ), f"Forbidden claims found: {claims}\n---\n{result.markdown[:500]}"
