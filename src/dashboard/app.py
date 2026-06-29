@@ -30,6 +30,7 @@ import streamlit as st
 
 from src.dashboard import api_client as api
 from src.dashboard import data_loaders as dl
+from src.dashboard import theme
 
 st.set_page_config(page_title="EGFR L858R Discovery", page_icon="🧬", layout="wide")
 
@@ -452,6 +453,7 @@ ranking where covalent/within-noise liabilities are surfaced as warnings rather 
 
 
 def main() -> None:
+    theme.inject()
     st.sidebar.title("🧬 EGFR L858R Discovery")
     base_url = st.sidebar.text_input("API base URL", api.DEFAULT_BASE_URL)
 

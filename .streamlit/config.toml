@@ -1,0 +1,11 @@
+# Streamlit theme for the EGFR L858R dashboard.
+# Minimal, light scientific-SaaS look: white canvas, soft card surfaces, one calm
+# teal accent, dark readable text. Presentation only; no behaviour is configured here.
+
+[theme]
+base = "light"
+primaryColor = "#2C7A7B"            # calm teal accent
+backgroundColor = "#FFFFFF"         # white canvas
+secondaryBackgroundColor = "#F4F6F8"  # soft surface for cards / sidebar
+textColor = "#1E2A32"               # dark slate, high contrast on white
+font = "sans serif"
