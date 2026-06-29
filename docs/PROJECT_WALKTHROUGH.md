@@ -26,9 +26,10 @@ explains the reasoning.
 15. [Applicability domain: knowing when not to trust the model](#15-applicability-domain-knowing-when-not-to-trust-the-model)
 16. [Final integrated ranking](#16-final-integrated-ranking)
 17. [The serving layer: FastAPI, Streamlit, and Docker](#17-the-serving-layer-fastapi-streamlit-and-docker)
-18. [Follow one molecule: gefitinib and gen_005](#18-follow-one-molecule-gefitinib-and-gen_005)
-19. [Limitations](#19-limitations)
-20. [Future work](#20-future-work)
+18. [Discovery Copilot: a deterministic query and explanation layer](#18-discovery-copilot-a-deterministic-query-and-explanation-layer)
+19. [Follow one molecule: gefitinib and gen_005](#19-follow-one-molecule-gefitinib-and-gen_005)
+20. [Limitations](#20-limitations)
+21. [Future work](#21-future-work)
 
 ---
 
@@ -741,6 +742,11 @@ covalent warhead detection, ADMET filtering, and applicability domain assessment
 
 ## 14. Reinforcement learning fine-tuning: what went wrong and why
 
+> **Terminology note**: in this section, "agent" refers to the REINVENT GRU generator, the
+> neural network whose policy is updated by the RL training loop. This is distinct from the
+> Discovery Copilot orchestration layer in `src/agent/` (see section 18), which is a conventional
+> software module that routes queries to deterministic functions.
+
 ### The goal
 
 RL fine-tuning aims to steer the generator away from average drug-like molecules toward EGFR
@@ -927,7 +933,7 @@ field in every response is always `false`.
 
 ### Streamlit dashboard (Phase 25)
 
-Six pages:
+Seven pages:
 
 1. **Single molecule:** type or paste a SMILES, see the full fast screen result
 2. **Batch screening:** upload a .smi/.txt/.csv file, screen up to 512 molecules
@@ -935,6 +941,7 @@ Six pages:
 4. **Model performance:** R^2 and RMSE tables, error bars, fingerprint ablation chart
 5. **Docking results:** sanity check table, noise error bars for the top-15
 6. **Limitations:** a plain-language statement of what the pipeline cannot do
+7. **Discovery Copilot:** a chat interface to the deterministic orchestration layer (see section 18)
 
 The dashboard first tries the FastAPI service; if the API is not reachable it falls back to scoring
 locally via the same ModelRegistry. The sidebar shows which mode is active.
@@ -958,7 +965,90 @@ docker compose up --build   # http://localhost:8000 (API) + http://localhost:850
 
 ---
 
-## 18. Follow one molecule: gefitinib and gen_005
+## 18. Discovery Copilot: a deterministic query and explanation layer
+
+### Why it exists
+
+By the end of section 17 the pipeline has many moving parts: four models, three docking JSON
+files, ADMET results, applicability domain bands, and a 68-candidate ranking table. Answering a
+question like "which of cmpd_015 and cmpd_024 should I prioritise, and why?" requires
+cross-referencing multiple JSON and CSV files and interpreting them together.
+
+The Discovery Copilot (`src/agent/`, `src/dashboard/copilot_page.py`) routes such queries to
+the appropriate precomputed-artifact tools, assembles the answer, and shows the reasoning. It does
+not make the science more certain. It makes the pipeline easier to run, audit, and explain without
+strengthening any claim.
+
+### Deterministic-first design
+
+No LLM is wired in v1. The controller (`src/agent/controller.py`) classifies the query by keyword
+matching into eight intent classes in priority order: `report`, `comparison`, `docking_query`,
+`batch_predict`, `candidate_lookup`, `single_predict`, `project_qa`, `unknown`. It then calls the
+relevant tool functions and assembles the structured output directly. An LLM hook
+(`src/agent/prompts.py`) returns None in v1 and can be wired to any API for natural-language
+reformatting without changing any other module.
+
+Tools compute; the orchestration layer explains. Every number in the answer comes from a file on
+disk, not from a language model.
+
+### The six tools (`src/agent/tools.py`)
+
+| Tool | What it reads |
+|---|---|
+| `predict_smiles` | Runs backbone (Model 1) and WT-proxy (Model 2) on any SMILES |
+| `batch_predict` | Same for up to 512 SMILES; invalid rows are included, not dropped |
+| `lookup_final_ranking` | `data/generated/final_ranked_candidates.csv` (68 candidates) |
+| `lookup_docking_results` | Three docking JSON files merged in priority order; never fabricates a score |
+| `compare_candidates` | Ranks two or more candidates by a conservative score (non-covalent, in-domain, ADMET, final score, noise-study call) |
+| `generate_candidate_report` | Calls the above tools and assembles a seven-section markdown document |
+
+### Guardrails (`src/agent/guardrails.py`)
+
+Two mechanisms:
+
+**Scientific warning injection** (`add_scientific_warnings`): appends caveats to any result that
+has a selectivity proxy (ML-derived, not statistically validated at n=9), a docking score
+(rigid receptor), a covalent flag, or an out-of-domain label.
+
+**Forbidden-claim sanitizer** (`find_forbidden_claims`): scans the assembled answer for phrases
+that assert experimental evidence the pipeline does not have. Forbidden phrases when not preceded
+by a negation within 30 characters: "is active", "is selective", "drug candidate", "validated",
+"proven", "confirmed". A negation before the phrase causes it to be ignored: "not validated
+experimentally" passes; "binding was confirmed by SPR" is flagged.
+
+Selectivity labels are enforced in output: ML-derived pIC50 difference is always labeled "ML
+proxy, exploratory"; docking-based delta is always labeled "structure-based (docking)".
+
+### Three-panel Streamlit UI
+
+```
+Discovery Copilot
+  [5 example-prompt buttons]
+  ───────────────────────────────────────────────
+  user:      compare cmpd_015 and cmpd_024
+  assistant: Panel 1  grounded answer (markdown, recommendation + reason)
+             Panel 2  Evidence [collapsible]: tools called and what they returned
+             Panel 3  Warnings [collapsible]: guardrail caveats
+             [Download report as Markdown]  (appears when a report is generated)
+  ───────────────────────────────────────────────
+  [chat input: "Ask the Discovery Copilot..."]
+```
+
+The registry is loaded lazily: `_registry()` is invoked only when a query is submitted, so the
+cold-start page render is near-instant. No API key is required. No LLM is called in v1.
+
+Every candidate report includes a Limitations section by template, regardless of what the query
+asks. The copilot does not run docking, train models, or update any artifact at query time.
+
+### Tests
+
+119 tests across six files: `test_agent_tools.py`, `test_agent_guardrails.py`,
+`test_agent_retrieval.py`, `test_agent_report.py`, `test_agent_controller.py`,
+`test_agent_copilot.py`. 773 total unit tests.
+
+---
+
+## 19. Follow one molecule: gefitinib and gen_005
 
 This section traces two molecules through every pipeline step with the real numbers produced
 by this codebase. Gefitinib is a well-known clinical drug present in the training data.
@@ -1163,7 +1253,7 @@ activity predictions.
 
 ---
 
-## 19. Limitations
+## 20. Limitations
 
 These are not caveats buried at the end. They are central to interpreting every number in this
 project.
@@ -1201,9 +1291,11 @@ biochemical assay, cell line, or animal model. Every number is computational.
 
 ---
 
-## 20. Future work
+## 21. Future work
 
-The negative results and limitations above point directly to the next steps.
+The negative results and limitations above point directly to the next steps. Phase 27
+(Discovery Copilot, a deterministic query and explanation layer, `src/agent/`) has been
+implemented; see section 18.
 
 **More L858R data.** The most important thing. Systematic mining of patent databases (Google
 Patents, Espacenet) and preprint servers for L858R binding data, combined with FEP-annotated

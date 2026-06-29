@@ -32,8 +32,9 @@ flowchart TD
     K & G --> M[Applicability domain\nmax Tanimoto, 3 bands]
     G & K --> N[Final composite ranking v2\n0.30 activity + 0.30 sel + 0.20 aff + 0.20 ADMET]
     N --> O[FastAPI backend\nprecomputed artifacts, no docking at request time]
-    O --> P[Streamlit dashboard\n6 pages, API with local fallback]
+    O --> P[Streamlit dashboard\n7 pages, API with local fallback]
     P --> Q[Docker packaging\napi + dashboard, models bind-mounted]
+    P --> R[Discovery Copilot page\ndeterministic tool orchestrator, no LLM\ngrounded answer, evidence, warnings]
 ```
 
 ---
@@ -175,7 +176,7 @@ activity prediction, docking selectivity noise analysis, and ADMET filtering.
 | API | FastAPI + uvicorn |
 | Dashboard | Streamlit + Altair |
 | Packaging | Docker + docker-compose (python:3.12-slim) |
-| Tests | pytest, 688 tests, `@unit` and `@integration` markers |
+| Tests | pytest, 773 tests, `@unit` and `@integration` markers |
 | Lint | ruff, black |
 | Python | 3.12 |
 
@@ -239,11 +240,30 @@ pip install -r requirements/base.txt
 pip install -r requirements/ml.txt    # XGBoost, LightGBM, MLflow, Optuna
 pip install -r requirements/gnn.txt   # PyTorch, PyG, MLflow
 
-PYTHONPATH=. .venv/Scripts/python.exe -m pytest                    # all 688 tests
+PYTHONPATH=. .venv/Scripts/python.exe -m pytest                    # all 773 tests
 PYTHONPATH=. .venv/Scripts/python.exe -m pytest -m unit            # fast, no training
 PYTHONPATH=. .venv/Scripts/python.exe -m uvicorn src.api.main:app --reload
 PYTHONPATH=. .venv/Scripts/python.exe -m streamlit run src/dashboard/app.py
 ```
+
+## Discovery Copilot
+
+The seventh dashboard page (`src/dashboard/copilot_page.py`) is a chat interface backed by
+`src/agent/`, a deterministic orchestration layer with no LLM dependency and no API key required.
+It routes natural-language queries to six precomputed tools: predict a molecule, batch predict,
+look up the final ranking, look up docking results, compare candidates, and generate a candidate
+report. Three display panels per response:
+
+- **Grounded answer**: the tool output formatted as readable markdown
+- **Evidence**: which tool functions were called and what they returned, making the reasoning
+  auditable
+- **Warnings**: guardrail caveats, including labels that mark ML selectivity as "ML proxy,
+  exploratory" and docking deltas as "structure-based (docking)"
+
+Guardrails refuse to assert experimental claims ("is active", "is selective", "validated") unless
+the phrase is preceded by a negation. No API key is required. No LLM is called in v1.
+
+See [docs/AGENT.md](docs/AGENT.md) for the full module reference and wiring instructions.
 
 ---
 
