@@ -15,6 +15,11 @@ import pytest
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+# scaffold_stats/evaluate_metrics are pure RDKit, but they live in sampler.py
+# which imports torch at module top, so importing them pulls in torch. Skip the
+# whole module when torch is absent (e.g. CI), matching the other generator tests.
+pytest.importorskip("torch", reason="PyTorch not installed")
+
 from src.generation.sampler import evaluate_metrics, scaffold_stats
 
 # Three molecules sharing ONE benzene scaffold + one with a different (pyridine) core
