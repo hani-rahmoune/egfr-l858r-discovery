@@ -13,11 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # NOTE: pip caching is intentionally disabled. The setup-python pip-cache
+      # post-step (cache save) was failing and failing the whole job even though
+      # install, lint, and tests all passed. Dropping the cache trades a little
+      # install time for a reliably green run.
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: "pip"
-          cache-dependency-path: requirements/ci.txt
 
       - name: Install dependencies
         run: pip install -r requirements/ci.txt
