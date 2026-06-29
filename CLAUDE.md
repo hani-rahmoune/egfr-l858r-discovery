@@ -772,6 +772,49 @@ PYTHONPATH=. .venv/Scripts/python.exe -m streamlit run src/dashboard/app.py   # 
 
 **Testing**: `data_loaders` + `ranking_placement` + `api_client` fallback logic are `@unit` (offline; `api_available` on a dead port returns False fast, local fallback is a mock registry). `TestAppRenders` is `@integration` — it runs the real `app.py` via Streamlit's `AppTest`, loads the real registry, and asserts the default page + all four data pages render with no exception.
 
+## Phase 27 — Discovery Copilot (deterministic AI orchestration layer)
+
+Package: `src/agent/` (`__init__`, `schemas`, `guardrails`, `retrieval`, `report`, `tools`, `prompts`, `controller`).
+Dashboard page: `src/dashboard/copilot_page.py` (7th page in `app.py`).
+Docs: `docs/AGENT.md`.
+119 new tests across 6 test files. **773 unit tests passing.**
+
+Run the Streamlit dashboard to access the copilot page:
+```bash
+PYTHONPATH=. .venv/Scripts/python.exe -m streamlit run src/dashboard/app.py   # → select "Discovery Copilot"
+```
+
+**Design**: deterministic-first — every answer comes from precomputed artifacts on disk. No LLM, no network call, no API key required in v1. `llm_summarize()` is a stub returning `None`; when wired it may only rephrase, never invent numbers. Guardrails apply regardless.
+
+**Module summary**:
+
+| Module | Responsibility |
+|---|---|
+| `schemas.py` | Typed dataclasses for all tool I/O: `PredictToolResult`, `DockingLookupResult`, `RankingLookupResult`, `BatchPredictToolResult`, `ComparisonResult`, `CandidateReport`, `RetrievalSection`, `AgentRequest`, `AgentResponse` |
+| `guardrails.py` | `add_scientific_warnings(result)` — attribute-based caveats; `find_forbidden_claims(text)` — regex + 30-char negation look-behind for "is active", "is selective", "drug candidate", "validated", "proven", "confirmed" |
+| `retrieval.py` | Keyword scoring over `README.md`, `docs/PROJECT_WALKTHROUGH.md`, `CLAUDE.md`; header tokens weighted 3×; in-memory cache; `clear_cache()` for tests |
+| `report.py` | Template markdown assembler: EXPLORATORY banner, SMILES, summary table, composite ranking, activity (labeled "ML proxy, exploratory"), docking (labeled "structure-based, docking"), ADMET, Warnings, Limitations |
+| `tools.py` | `predict_smiles`, `batch_predict`, `lookup_final_ranking`, `lookup_docking_results` (merges 3 JSON files; noise-study mean_delta overlays seed-42 values for top-15), `compare_candidates`, `generate_candidate_report` |
+| `prompts.py` | `SYSTEM_PROMPT` + `llm_summarize(system_prompt, context) -> str | None` stub |
+| `controller.py` | `classify_intent` (8 rules, priority-ordered keyword match) + `handle(request, registry)` dispatch; comparison branch now surfaces individual `lookup_final_ranking` / `lookup_docking_results` calls in `tool_results` for Evidence panel transparency |
+
+**8 intent classes** (priority order): `report`, `comparison`, `docking_query`, `batch_predict`, `candidate_lookup`, `single_predict`, `project_qa`, `unknown`.
+
+**Selectivity label discipline** (two separate signals, never mixed):
+- Docking delta → always labeled `"structure-based (docking)"` in reports and Evidence
+- ML proxy → always labeled `"ML proxy, exploratory"` in all output
+
+**Copilot Streamlit page** (`src/dashboard/copilot_page.py`):
+- 5 example-prompt buttons (Single molecule / Compare / Candidate report / Explain ranking / Project QA)
+- Chat input → `handle()` → 3 display panels: answer (markdown), Evidence (collapsible, tool calls + results), Warnings (collapsible, guardrail caveats)
+- Markdown download button when a `CandidateReport` is in the response
+- `@st.cache_resource` registry: lazy, only loaded on first submitted query — initial render is instant
+- Pure helpers `format_evidence`, `extract_report_markdown`, `get_download_filename` have no Streamlit dependency; all 3 are unit-tested
+
+**Verified outputs** (deterministic controller, June 2026):
+- `compare cmpd_015 and cmpd_024` → Recommendation: cmpd_015 (rank 1/68, final_score=0.730, ADMET norm=1.00, noise-study L858R_selective). Evidence panel: 5 lines (2× lookup_final_ranking + 2× lookup_docking_results + compare_candidates). Warnings: comparison exploratory caveat.
+- `generate a report for gen_005` → 3,129-char markdown report, rank 21/68, pred pIC50 8.102, download as `report_gen_005.md`.
+
 ## Phase 26 — Docker packaging
 
 Run locally without Docker: see the commands in `## Commands` above.
@@ -894,3 +937,4 @@ Results: `models/gnn/general/metadata.json`, `models/gnn/wt_proxy/metadata.json`
 - **Streamlit dashboard (Phase 25)**: **done.** `src/dashboard/` (app + data_loaders + api_client). 6 pages (single, batch, ranking, performance, docking, limitations). Prefers the FastAPI service, falls back to local `ModelRegistry`. Altair visuals + error bars; honest Limitations page. 26 tests (`tests/test_dashboard.py`, incl. an `AppTest` render smoke test). See Phase 25 section above. 668 tests passing.
 - **Docker packaging (Phase 26)**: **done.** `docker/api/Dockerfile` + `docker/dashboard/Dockerfile` (both `python:3.12-slim`). `requirements/serving.txt` — shared deps: numpy/pandas/scipy/joblib/sklearn/xgboost/rdkit/pydantic/pyyaml/python-dotenv; no torch, no lightgbm, no Vina/GNINA. `docker-compose.yml`: api (port 8000, healthcheck) + dashboard (port 8501, `depends_on: service_healthy`); models/ and data/ volume-mounted read-only; `API_BASE_URL=http://api:8000` so dashboard reaches API by service name; `USE_GCS=false` default; commented MLflow stub. `src/dashboard/api_client.py` DEFAULT_BASE_URL now reads `$API_BASE_URL` env var (falls back to localhost for non-Docker use). `.dockerignore` excludes `.venv/`, `data/docking/`, `data/raw/`, `data/processed/`, `models/generator/*.pt`, `tests/`, `scripts/`. 608 unit tests passing. `docker compose up --build` requires Docker Desktop to be running.
 - **MLflow (Phase 11)**: **done** — `src/models/mlflow_utils.py`. Experiment "EGFR_QSAR_benchmark". `start_run(task, model, seed)` context manager. `log_seed_summary()` logs mean/std + per-seed JSON artifact. Integrated into `eval_seed_stability.py` and `scripts/train_gnn.py`. MLflow 3.x fix: use `mlflow.set_experiment()` instead of removed `get_experiment_by_name`. Run `mlflow ui --backend-store-uri mlruns` to browse.
+- **Discovery Copilot (Phase 27)**: **done.** `src/agent/` — 8-module deterministic orchestration layer (schemas, guardrails, retrieval, report, tools, prompts, controller + `__init__`). No LLM required in v1; `llm_summarize` returns `None` and the structured tool output is used directly. Controller classifies 8 intents, calls precomputed-artifact tools, applies scientific guardrails (forbidden-claim regex + negation look-behind), and returns `AgentResponse(intent, answer, tool_results, warnings, sources)`. Key tools: `predict_smiles`, `batch_predict`, `lookup_final_ranking`, `lookup_docking_results`, `compare_candidates`, `generate_candidate_report`. Retrieval: keyword-scored sections over README/CLAUDE.md/PROJECT_WALKTHROUGH (header 3×). Reports: template markdown with EXPLORATORY banner, summary, ranking, docking (structure-based label), activity (ML proxy label), ADMET, Limitations. Streamlit 7th page `src/dashboard/copilot_page.py`: chat input → controller, 3 panels (answer / Evidence / Warnings), 5 example-prompt buttons, markdown download for CandidateReport. 119 tests across 5 test files (`test_agent_tools`, `_guardrails`, `_retrieval`, `_report`, `_controller`, `_copilot`). **773 unit tests passing.** See `docs/AGENT.md` for full architecture, tool reference, guardrail spec, retrieval spec, and LLM wiring guide.

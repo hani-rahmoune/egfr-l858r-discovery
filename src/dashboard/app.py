@@ -1,13 +1,14 @@
 """
-Streamlit dashboard for the EGFR L858R drug-discovery platform (Phase 25).
+Streamlit dashboard for the EGFR L858R drug-discovery platform (Phase 25/27).
 
-Six pages:
-  1. Single molecule   — /predict (API) or local registry fallback
-  2. Batch screening    — /batch_predict over uploaded/pasted SMILES
-  3. Final ranking      — Phase 23 fused ranking; generated vs known
-  4. Model performance  — QSAR scaffold-split metrics (seed std), FP ablation, Model 3/4 verdicts
-  5. Docking results    — error-bar'd selectivity shortlist + sanity check + generated docking
-  6. Limitations        — the honest findings, stated plainly
+Seven pages:
+  1. Single molecule      — /predict (API) or local registry fallback
+  2. Batch screening       — /batch_predict over uploaded/pasted SMILES
+  3. Final ranking         — Phase 23 fused ranking; generated vs known
+  4. Model performance     — QSAR scaffold-split metrics (seed std), FP ablation, Model 3/4 verdicts
+  5. Docking results       — error-bar'd selectivity shortlist + sanity check + generated docking
+  6. Limitations           — the honest findings, stated plainly
+  7. Discovery Copilot     — deterministic chat over precomputed artifacts (Phase 27)
 
 Scoring prefers the FastAPI service if it is up (GET /health), else falls back to
 scoring locally through the same ModelRegistry. Everything is EXPLORATORY.
@@ -463,6 +464,7 @@ def main() -> None:
             "Model performance",
             "Docking results",
             "Limitations",
+            "Discovery Copilot",
         ],
     )
 
@@ -486,6 +488,9 @@ def main() -> None:
         page_docking()
     elif page == "Limitations":
         page_limitations()
+    elif page == "Discovery Copilot":
+        from src.dashboard.copilot_page import page_copilot
+        page_copilot()
 
 
 if __name__ == "__main__":
