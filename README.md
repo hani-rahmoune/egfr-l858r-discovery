@@ -1,6 +1,6 @@
-# EGFR L858R Drug Discovery, MutantScope
+# EGFR L858R Drug Discovery
 
-[![CI](https://github.com/hani-rahmoune/MutantScope-EGFR/actions/workflows/ci.yml/badge.svg)](https://github.com/hani-rahmoune/MutantScope-EGFR/actions/workflows/ci.yml)
+[![CI](https://github.com/hani-rahmoune/egfr-l858r-discovery/actions/workflows/ci.yml/badge.svg)](https://github.com/hani-rahmoune/egfr-l858r-discovery/actions/workflows/ci.yml)
 
 Mutation-aware computational pipeline for prioritising EGFR inhibitor candidates selective for the
 L858R NSCLC mutation. **EXPLORATORY throughout, not a validated drug-discovery platform.**
@@ -270,7 +270,7 @@ See [docs/AGENT.md](docs/AGENT.md) for the full module reference and wiring inst
 ## Detailed walkthrough and limitations
 
 Full modeling strategy, data pipeline, docking setup, generation phases, evaluation results,
-and the complete negative-result log are in [CLAUDE.md](CLAUDE.md).
+and the complete negative-result log are in [docs/PROJECT_WALKTHROUGH.md](docs/PROJECT_WALKTHROUGH.md).
 
 The Limitations page in the dashboard (`http://localhost:8501`) states the negative results
 plainly: L858R ML does not beat the backbone at n=22, selectivity is not modelable at n=9,

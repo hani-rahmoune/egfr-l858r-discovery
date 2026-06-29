@@ -321,7 +321,7 @@ def write_receptor_pdbqt(
     ]
     ns = NeighborSearch(heavy_atoms)
 
-    lines = ["REMARK  PDBQT receptor prepared by prepare_protein.py (MutantScope)"]
+    lines = ["REMARK  PDBQT receptor prepared by prepare_protein.py"]
     serial = 1
 
     for chain in model:

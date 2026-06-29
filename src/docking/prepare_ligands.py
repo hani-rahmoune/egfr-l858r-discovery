@@ -131,7 +131,7 @@ def ligand_pdb_to_pdbqt_rigid(
 
     conf = mol.GetConformer()
     lines = [
-        "REMARK  Rigid PDBQT prepared by prepare_ligands.py (MutantScope)",
+        "REMARK  Rigid PDBQT prepared by prepare_ligands.py",
         "REMARK  Gasteiger partial charges; no torsion records (rigid body)",
         "ROOT",
     ]

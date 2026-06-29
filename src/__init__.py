@@ -1,1 +1,1 @@
-"""MutantScope EGFR L858R drug discovery pipeline."""
+"""EGFR L858R drug discovery pipeline."""

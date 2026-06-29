@@ -159,8 +159,8 @@ Examples that are **flagged**:
 
 ## Retrieval
 
-`retrieval.retrieve(query, top_k=5)` scores every section of the three
-documentation files (README.md, docs/PROJECT_WALKTHROUGH.md, CLAUDE.md) by
+`retrieval.retrieve(query, top_k=5)` scores every section of the project
+documentation files (README.md, docs/PROJECT_WALKTHROUGH.md) by
 keyword overlap with the query:
 
 ```

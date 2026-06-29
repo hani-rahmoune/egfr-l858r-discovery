@@ -1,9 +1,9 @@
 # Project Walkthrough: EGFR L858R Drug Discovery Pipeline
 
-This document walks through every stage of the MutantScope pipeline in plain language, from the
-biology that motivates it to the final ranked list of candidates. It is written for someone who
-has never seen the project. Code details live in [CLAUDE.md](../CLAUDE.md); this document
-explains the reasoning.
+This document walks through every stage of the EGFR L858R drug discovery pipeline in plain
+language, from the biology that motivates it to the final ranked list of candidates. It is written
+for someone who has never seen the project. Code details live in the source files and scripts;
+this document explains the reasoning.
 
 ---
 
