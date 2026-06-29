@@ -14,11 +14,16 @@ Integration tests (marked 'integration', require prepared PDB files):
 
 from __future__ import annotations
 
+import importlib.util
 import textwrap
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
+
+# Biopython (Bio) backs verify_box_coverage but is not a CI dependency, so skip
+# the structure-alignment unit tests when it is absent.
+_HAS_BIO = importlib.util.find_spec("Bio") is not None
 
 from src.docking.parse_results import best_affinity, parse_vina_output
 from src.docking.vina_runner import get_vina_exe, run_vina
@@ -194,6 +199,7 @@ class TestVinaRunner:
 # ── align_structures (unit) ───────────────────────────────────────────────────
 
 
+@pytest.mark.skipif(not _HAS_BIO, reason="Biopython not installed")
 @pytest.mark.unit
 class TestAlignStructuresUnit:
     def test_verify_box_coverage_centroid_inside(self, tmp_path):

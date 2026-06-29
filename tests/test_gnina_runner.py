@@ -15,6 +15,7 @@ Integration tests (marked 'integration', require WSL2 + gnina_v1.0 binary):
 
 from __future__ import annotations
 
+import sys
 import textwrap
 from pathlib import Path
 
@@ -74,6 +75,13 @@ SAMPLE_GNINA_STDOUT = textwrap.dedent(
 # ── win_to_wsl ────────────────────────────────────────────────────────────────
 
 
+# win_to_wsl translates Windows drive paths (C:\...) to WSL mounts (/mnt/c/...).
+# It is only meaningful on Windows; on the Linux CI runner a Windows path is not
+# parsed as a drive path, so these assertions do not hold. Skip off-Windows.
+@pytest.mark.skipif(
+    sys.platform != "win32",
+    reason="win_to_wsl is Windows-only path translation",
+)
 @pytest.mark.unit
 class TestWinToWsl:
     def test_c_drive_conversion(self):
